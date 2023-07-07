@@ -153,12 +153,12 @@ class Command {
             return
         }
         val list = jsonFormant.decodeFromString<ManageList>(file.readText())
-        plugin.logger.info("${list.list.filter { it.install }.map { it.identify }.joinToString(" ,")} will be installed.")
+        plugin.logger.info("${list.list.filter { it.install && it.editedCurrentVersion != it.editedLatestVersion }.joinToString(" ,") { it.identify }} will be installed.")
 
         val error = arrayListOf<String>()
 
         list.list.forEach { data ->
-            if (data.install) {
+            if (data.install && data.editedCurrentVersion != data.editedLatestVersion) {
                 val url = URL(data.latestUrl)
                 try {
                     plugin.logger.info("Downloading ${data.name}...")
@@ -173,7 +173,7 @@ class Command {
                 }
             }
         }
-        plugin.logger.info("${list.list.filter { it.install }.size - error.size} plugins have been installed.")
+        plugin.logger.info("${list.list.filter { it.install && it.editedCurrentVersion != it.editedLatestVersion }.size - error.size} plugins have been installed.")
         if (error.isNotEmpty()) {
             plugin.logger.warning("${error.joinToString(" ,")} could not be installed.")
         }
