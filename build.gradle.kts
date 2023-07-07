@@ -80,7 +80,7 @@ tasks {
 
 bukkit {
     name = "MinecraftPluginManager" // need to change
-    version = "1.0.0"
+    version = "minecraft_plugin_version"
     website = "https://github.com/Nlkomaru/MinecraftPluginManager"  // need to change
 
     main = "$group.minecraftpluginmanager.MinecraftPluginManager"  // need to change
