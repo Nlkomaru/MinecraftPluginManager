@@ -1,8 +1,7 @@
-rootProject.name = "NoticeTemplate"
+rootProject.name = "MinecraftPluginManager"
 
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven("https://papermc.io/repo/repository/maven-public/")
     }
 }
