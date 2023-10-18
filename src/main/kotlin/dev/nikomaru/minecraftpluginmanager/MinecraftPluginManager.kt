@@ -1,20 +1,25 @@
 package dev.nikomaru.minecraftpluginmanager
 
-import cloud.commandframework.bukkit.CloudBukkitCapabilities
-import cloud.commandframework.execution.AsynchronousCommandExecutionCoordinator
-import cloud.commandframework.kotlin.coroutines.annotations.installCoroutineSupport
-import cloud.commandframework.meta.SimpleCommandMeta
-import cloud.commandframework.paper.PaperCommandManager
 import dev.nikomaru.minecraftpluginmanager.commands.Command
-import org.bukkit.command.CommandSender
+import dev.nikomaru.minecraftpluginmanager.commands.Command.Companion.jsonFormant
+import dev.nikomaru.minecraftpluginmanager.commands.Suggestion
+import dev.nikomaru.minecraftpluginmanager.data.ManageList
+import kotlinx.serialization.decodeFromString
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import revxrsal.commands.autocomplete.SuggestionProvider
+import revxrsal.commands.bukkit.BukkitCommandHandler
+import revxrsal.commands.command.CommandActor
+import revxrsal.commands.command.CommandParameter
+import revxrsal.commands.command.ExecutableCommand
+import revxrsal.commands.ktx.supportSuspendFunctions
 
 class MinecraftPluginManager : JavaPlugin() {
 
     companion object {
         lateinit var plugin: Plugin
     }
+
     override fun onEnable() {
         // Plugin startup logic
         plugin = this
@@ -27,27 +32,48 @@ class MinecraftPluginManager : JavaPlugin() {
 
     private fun setCommand() {
 
-        val commandManager: PaperCommandManager<CommandSender> = PaperCommandManager(
-            this,
-            AsynchronousCommandExecutionCoordinator.newBuilder<CommandSender>().build(),
-            java.util.function.Function.identity(),
-            java.util.function.Function.identity()
-        )
+        val handler = BukkitCommandHandler.create(this)
 
+        handler.setSwitchPrefix("--")
+        handler.setFlagPrefix("--")
+        handler.supportSuspendFunctions()
 
-        if (commandManager.hasCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            commandManager.registerAsynchronousCompletions()
+        handler.autoCompleter.registerSuggestionFactory { parameter: CommandParameter ->
+            if (parameter.hasAnnotation(Suggestion::class.java)) {
+                val string = parameter.getAnnotation(Suggestion::class.java).value
+                if (string == "identify") {
+                    return@registerSuggestionFactory SuggestionProvider { _: List<String>, _: CommandActor, _: ExecutableCommand ->
+                        val file = dataFolder.resolve("manageList.json")
+                        val list = jsonFormant.decodeFromString<ManageList>(file.readText())
+                        if (file.exists()) {
+                            return@SuggestionProvider list.list.map { it.identify }
+                        }
+                        return@SuggestionProvider arrayListOf<String>()
+                    }
+                }
+                return@registerSuggestionFactory null
+            }
+            null
         }
 
-        val annotationParser = cloud.commandframework.annotations.AnnotationParser(
-            commandManager,
-            CommandSender::class.java
-        ) {
-            SimpleCommandMeta.empty()
-        }.installCoroutineSupport()
-
-        with(annotationParser) {
-            parse(Command())
+        handler.setHelpWriter { command, _ ->
+            java.lang.String.format(
+                """
+                <color:yellow>コマンド: <color:gray>%s
+                <color:yellow>使用方法: <color:gray>%s
+                <color:yellow>説明: <color:gray>%s
+                
+                """.trimIndent(),
+                command.path.toList(),
+                command.usage,
+                command.description,
+            )
         }
+
+        with(handler) {
+            register(Command())
+        }
+
+
     }
 }

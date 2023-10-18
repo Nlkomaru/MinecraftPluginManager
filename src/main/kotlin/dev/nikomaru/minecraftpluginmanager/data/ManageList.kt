@@ -11,6 +11,7 @@ data class PluginData(
     val name: String,
     val currentVersion: String,
     val editedCurrentVersionPrefix : String = "v<cutCurrentVersion>",
+    val regex: String  = "/[^0-9.]/",
     val editedCurrentVersion : String,
     val latestVersion: String,
     val editedLatestVersionPrefix : String = "v<cutGetLatestVersion>",
