@@ -13,11 +13,15 @@ import org.bukkit.command.CommandSender
 import org.json.JSONArray
 import org.json.JSONObject
 import revxrsal.commands.annotation.Command
+import revxrsal.commands.annotation.Default
 import revxrsal.commands.annotation.Description
+import revxrsal.commands.annotation.Range
 import revxrsal.commands.annotation.Subcommand
 import revxrsal.commands.bukkit.annotation.CommandPermission
+import revxrsal.commands.help.CommandHelp
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.math.min
 
 
 @Command("mpm")
@@ -112,6 +116,11 @@ class Command {
         sender.sendRichMessage("Plugin information has been updated.")
     }
 
+    @Subcommand("help")
+    fun help(sender: CommandSender, helpEntries: CommandHelp<String>, @Default("1") page: Int) {
+        for (entry in helpEntries.paginate(page, 7)) sender.sendRichMessage(entry)
+    }
+
     @Subcommand("repository add")
     @Description("プラグインのリポジトリを追加します。")
     fun repo(sender: CommandSender, @Suggestion("identify") identify: String, url: String) {
@@ -160,21 +169,22 @@ class Command {
 
     @Subcommand("show")
     @Description("プラグインの情報を表示します。")
-    fun showAll(sender: CommandSender, page: Int = 1) {
+    fun showAll(sender: CommandSender, @Range(min=1.0) @Default("1") page: Int) {
         val file = plugin.dataFolder.resolve("manageList.json")
         if (!file.exists()) {
             plugin.logger.warning("manageList.json is not found")
             return
         }
         val original = jsonFormant.decodeFromString<ManageList>(file.readText()).list
-        val list = original.subList((page - 1) * 5, page * 5)
+        val list = original.subList((page - 1) * 5, if (original.size <= page * 5) original.size - 1 else page * 5)
         list.forEach {
             val message = """
-                name : ${it.identify}
-                repositoryUrl : ${it.repositoryUrl} <click:suggest_command:'/mpm repository add'>[クリックで変更]</click>
-                downloadIdentify : ${it.repositoryUrl}<click:suggest_command:'/mpm download add'>[クリックで変更]</click>
-                autoInfoUpdate : <click:run_command:'/mpm autoIndoUpdate toggle'>${it.identify}>${if (it.autoInfoUpdate) "<color:red>[クリックで無効]" else "<color:green>[クリックで有効]"}</click>
-                install : <click:run_command:'/mpm install toggle'>${if (it.install) "<color:red>[クリックで無効]" else "<color:green>[クリックで有効]"}</click>
+                <yellow>name</yellow> : ${it.identify}
+                <yellow>repositoryUrl</yellow> : <click:open_url:'${it.repositoryUrl}'>${it.repositoryUrl}</click> <click:suggest_command:'/mpm repository add ${it.identify}'>[クリックで変更]</click>
+                <yellow>downloadIdentify</yellow> : <click:open_url:'${it.downloadIdentify}'>${it.downloadIdentify}</click><click:suggest_command:'/mpm download add ${it.identify}'>[クリックで変更]</click>
+                <yellow>autoInfoUpdate</yellow> : <click:run_command:'/mpm toggle autoInfoUpdate ${it.identify}'>${if (it.autoInfoUpdate) "<color:red>[クリックで無効]" else "<color:green>[クリックで有効]"}</click>
+                <yellow>install</yellow> : <click:run_command:'/mpm toggle install ${it.identify}'>${if (it.install) "<color:red>[クリックで無効]" else "<color:green>[クリックで有効]"}</click>
+            
             """.trimIndent()
             sender.sendRichMessage(message)
         }
@@ -183,7 +193,7 @@ class Command {
         if (page != original.size / 5 + 1) sender.sendRichMessage("<click:run_command:'/mpm show ${page + 1}'>[次のページへ]</click>")
     }
 
-    @Subcommand("autoInfoUpdate toggle")
+    @Subcommand("toggle autoInfoUpdate")
     @Description("プラグインの情報更新を有効化/無効化します。")
     fun autoInfoUpdateToggle(sender: CommandSender, @Suggestion("identify") identify: String) {
         val file = plugin.dataFolder.resolve("manageList.json")
@@ -204,7 +214,7 @@ class Command {
         sender.sendRichMessage("AutoInfoUpdate has been changed.")
     }
 
-    @Subcommand("install toggle")
+    @Subcommand("toggle install")
     @Description("プラグインのインストールを有効化/無効化します。")
     fun installToggle(sender: CommandSender, @Suggestion("identify") identify: String) {
         val file = plugin.dataFolder.resolve("manageList.json")

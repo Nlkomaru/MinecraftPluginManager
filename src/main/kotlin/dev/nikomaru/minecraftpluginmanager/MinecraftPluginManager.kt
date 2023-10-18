@@ -59,12 +59,11 @@ class MinecraftPluginManager : JavaPlugin() {
         handler.setHelpWriter { command, _ ->
             java.lang.String.format(
                 """
-                <color:yellow>コマンド: <color:gray>%s
-                <color:yellow>使用方法: <color:gray>%s
+                <color:yellow>コマンド: <color:gray>%s %s
                 <color:yellow>説明: <color:gray>%s
                 
                 """.trimIndent(),
-                command.path.toList(),
+                command.path.toRealString(),
                 command.usage,
                 command.description,
             )
