@@ -17,11 +17,11 @@ import revxrsal.commands.annotation.Default
 import revxrsal.commands.annotation.Description
 import revxrsal.commands.annotation.Range
 import revxrsal.commands.annotation.Subcommand
+import revxrsal.commands.annotation.Switch
 import revxrsal.commands.bukkit.annotation.CommandPermission
 import revxrsal.commands.help.CommandHelp
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.math.min
 
 
 @Command("mpm")
@@ -236,20 +236,20 @@ class Command {
     }
 
 
-    @Subcommand("version list")
+    @Subcommand("version")
     @Description("プラグインのバージョンを表示します。")
-    fun versionList(sender: CommandSender) {
+    fun versionList(sender: CommandSender, @Switch("allow-all") allowAll : Boolean) {
         val file = plugin.dataFolder.resolve("manageList.json")
         if (!file.exists()) {
             plugin.logger.warning("manageList.json is not found")
             return
         }
         val list = jsonFormant.decodeFromString<ManageList>(file.readText())
-        list.list.forEach {
+        list.list.filter { it.autoInfoUpdate || allowAll }.forEach {
             if (it.editedLatestVersion != it.editedCurrentVersion) {
-                sender.sendMessage("${it.name} : <red>${it.editedCurrentVersion}</red> -> <green>${it.editedLatestVersion}</green>")
+                sender.sendRichMessage("<yellow>${it.name}</yellow> : <red>${it.editedCurrentVersion}</red> -> <green>${it.editedLatestVersion}</green>")
             } else {
-                sender.sendMessage("${it.name} : <green>${it.editedCurrentVersion}</green>")
+                sender.sendRichMessage("<yellow>${it.name}</yellow> : <green>${it.editedCurrentVersion}</green>")
             }
         }
     }
