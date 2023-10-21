@@ -49,7 +49,7 @@ class Command {
                 identify = pluginMeta.name,
                 name = pluginMeta.name.lowercase(),
                 currentVersion = pluginMeta.version,
-                editedCurrentVersion = "v${pluginMeta.version.replace("/[^0-9.]/".toRegex(), "")}",
+                editedCurrentVersion = "v${pluginMeta.version.replace("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$".toRegex(), "")}",
                 latestVersion = "",
                 editedLatestVersion = "",
                 repositoryUrl = pluginMeta.website ?: "",
@@ -91,12 +91,12 @@ class Command {
                         currentVersion = plugin.pluginMeta.version,
                         editedCurrentVersionPrefix = data.editedCurrentVersionPrefix,
                         editedCurrentVersion = data.editedCurrentVersionPrefix.replace(
-                            "<cutCurrentVersion>", plugin.pluginMeta.version.replace("/[^0-9.]/".toRegex(), "")
+                            "<cutCurrentVersion>", plugin.pluginMeta.version.replace(data.regex.toRegex(), "")
                         ),
                         latestVersion = latestVersion.first,
                         editedLatestVersionPrefix = data.editedLatestVersionPrefix,
                         editedLatestVersion = data.editedLatestVersionPrefix.replace(
-                            "<cutGetLatestVersion>", latestVersion.first.replace("/[^0-9.]/".toRegex(), "")
+                            "<cutGetLatestVersion>", latestVersion.first.replace(data.regex.toRegex(), "")
                         ),
                         repositoryUrl = data.repositoryUrl,
                         autoInfoUpdate = data.autoInfoUpdate,
