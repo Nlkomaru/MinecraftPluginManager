@@ -81,6 +81,6 @@ bukkit {
     main = "$group.minecraftpluginmanager.MinecraftPluginManager"  // need to change
 
     apiVersion = "1.19"
-    libraries = listOf("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.11.0",
+    libraries = listOf("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.14.0",
         "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.11.0")
 }
