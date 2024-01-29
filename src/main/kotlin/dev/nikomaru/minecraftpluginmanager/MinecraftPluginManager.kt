@@ -1,13 +1,15 @@
 package dev.nikomaru.minecraftpluginmanager
 
-import dev.nikomaru.minecraftpluginmanager.commands.UpdateCommand
-import dev.nikomaru.minecraftpluginmanager.commands.RemoveUnmanaged
+import dev.nikomaru.minecraftpluginmanager.commands.*
+import org.bukkit.command.PluginCommand
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
+import org.koin.core.context.GlobalContext
+import org.koin.dsl.module
 import revxrsal.commands.bukkit.BukkitCommandHandler
 import revxrsal.commands.ktx.supportSuspendFunctions
 
-class MinecraftPluginManager : JavaPlugin() {
+open class MinecraftPluginManager : JavaPlugin() {
 
     companion object {
         lateinit var plugin: Plugin
@@ -17,6 +19,17 @@ class MinecraftPluginManager : JavaPlugin() {
         // Plugin startup logic
         plugin = this
         setCommand()
+        setupKoin()
+    }
+
+    private fun setupKoin() {
+        val appModule = module {
+            single<MinecraftPluginManager> { this@MinecraftPluginManager }
+        }
+
+        GlobalContext.getOrNull() ?: GlobalContext.startKoin {
+            modules(appModule)
+        }
     }
 
     override fun onDisable() {
@@ -45,8 +58,17 @@ class MinecraftPluginManager : JavaPlugin() {
         }
 
         with(handler) {
-            register(UpdateCommand())
+            register(HelpCommand())
+            register(InfoCommand())
+            register(InstallCommand())
+            register(ListCommand())
+            register(LockCommand())
+            register(OutdatedCommand())
+            register(ReloadCommand())
             register(RemoveUnmanaged())
+            register(SearchCommand())
+            register(UpdateCommand())
+            register(VersionCommand())
         }
 
 

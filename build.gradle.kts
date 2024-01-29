@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     id("java")
     kotlin("jvm") version "1.8.10"
@@ -6,7 +8,6 @@ plugins {
     id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
     kotlin("plugin.serialization") version "1.8.10"
 }
-
 group = "dev.nikomaru"
 version = "1.0-SNAPSHOT"
 
@@ -18,33 +19,45 @@ repositories {
     maven("https://jitpack.io")
     maven("https://plugins.gradle.org/m2/")
     maven("https://repo.incendo.org/content/repositories/snapshots")
+    maven("https://repo.codemc.io/repository/maven-public/")
 }
 
-val paperVersion = "1.19.4-R0.1-SNAPSHOT"
-val lampVersion = "3.1.7"
-val vaultVersion = "1.7"
-val mccoroutineVersion = "2.11.0"
-val kotlinxcoroutineVersion = "1.7.0-RC"
 
 dependencies {
-    compileOnly("io.papermc.paper", "paper-api", paperVersion)
+    val paperVersion = "1.20.4-R0.1-SNAPSHOT"
+    val mccoroutineVersion = "2.14.0"
+    val lampVersion = "3.1.8"
+    val koinVersion = "3.5.3"
+    val coroutineVersion = "1.7.3"
+    val serializationVersion = "1.6.2"
+    val junitVersion = "5.10.1"
+    val mockkVersion = "1.13.9"
+    val mockBukkitVersion = "3.65.0"
+
+
+    compileOnly("io.papermc.paper:paper-api:$paperVersion")
 
     library(kotlin("stdlib"))
 
-    compileOnly("com.github.MilkBowl", "VaultAPI", vaultVersion)
+    implementation("com.github.Revxrsal.Lamp:common:$lampVersion")
+    implementation("com.github.Revxrsal.Lamp:bukkit:$lampVersion")
 
-    implementation("com.github.Revxrsal.Lamp","common",lampVersion)
-    implementation("com.github.Revxrsal.Lamp","bukkit",lampVersion)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxcoroutineVersion)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
 
-    implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion)
-    implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-core", mccoroutineVersion)
+    library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:$mccoroutineVersion")
+    library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:$mccoroutineVersion")
 
-    implementation("org.json:json:20230227")
+    library("org.yaml:snakeyaml:2.2")
 
-    implementation("org.apache.commons:commons-io:1.3.2")
+    implementation("io.insert-koin:koin-core:$koinVersion")
+
+    testImplementation("com.github.seeseemelk:MockBukkit-v1.20:$mockBukkitVersion")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
 }
 
 java {
@@ -63,13 +76,20 @@ tasks {
     build {
         dependsOn(shadowJar)
     }
-}
-
-tasks {
     runServer {
         minecraftVersion("1.20.4")
     }
-
+    withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+    }
+    test {
+        useJUnitPlatform()
+        testLogging {
+            showStandardStreams = true
+            events("passed", "skipped", "failed")
+            exceptionFormat = TestExceptionFormat.FULL
+        }
+    }
 }
 
 
