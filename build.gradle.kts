@@ -82,5 +82,5 @@ bukkit {
 
     apiVersion = "1.19"
     libraries = listOf("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.11.0",
-        "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.11.0")
+        "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.14.0")
 }
