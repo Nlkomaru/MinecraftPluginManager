@@ -36,7 +36,7 @@ dependencies {
     implementation("com.github.Revxrsal.Lamp","common",lampVersion)
     implementation("com.github.Revxrsal.Lamp","bukkit",lampVersion)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", kotlinxcoroutineVersion)
 
     implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion)
