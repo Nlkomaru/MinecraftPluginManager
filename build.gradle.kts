@@ -42,7 +42,7 @@ dependencies {
     implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-api", mccoroutineVersion)
     implementation("com.github.shynixn.mccoroutine", "mccoroutine-bukkit-core", mccoroutineVersion)
 
-    implementation("org.json:json:20230227")
+    implementation("org.json:json:20231013")
 
     implementation("org.apache.commons:commons-io:1.3.2")
 }
