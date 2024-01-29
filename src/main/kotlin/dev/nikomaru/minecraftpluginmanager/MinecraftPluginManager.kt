@@ -1,17 +1,10 @@
 package dev.nikomaru.minecraftpluginmanager
 
-import dev.nikomaru.minecraftpluginmanager.commands.Command
-import dev.nikomaru.minecraftpluginmanager.commands.Command.Companion.jsonFormant
-import dev.nikomaru.minecraftpluginmanager.commands.Suggestion
-import dev.nikomaru.minecraftpluginmanager.data.ManageList
-import kotlinx.serialization.decodeFromString
+import dev.nikomaru.minecraftpluginmanager.commands.UpdateCommand
+import dev.nikomaru.minecraftpluginmanager.commands.RemoveUnmanaged
 import org.bukkit.plugin.Plugin
 import org.bukkit.plugin.java.JavaPlugin
-import revxrsal.commands.autocomplete.SuggestionProvider
 import revxrsal.commands.bukkit.BukkitCommandHandler
-import revxrsal.commands.command.CommandActor
-import revxrsal.commands.command.CommandParameter
-import revxrsal.commands.command.ExecutableCommand
 import revxrsal.commands.ktx.supportSuspendFunctions
 
 class MinecraftPluginManager : JavaPlugin() {
@@ -38,24 +31,6 @@ class MinecraftPluginManager : JavaPlugin() {
         handler.setFlagPrefix("--")
         handler.supportSuspendFunctions()
 
-        handler.autoCompleter.registerSuggestionFactory { parameter: CommandParameter ->
-            if (parameter.hasAnnotation(Suggestion::class.java)) {
-                val string = parameter.getAnnotation(Suggestion::class.java).value
-                if (string == "identify") {
-                    return@registerSuggestionFactory SuggestionProvider { _: List<String>, _: CommandActor, _: ExecutableCommand ->
-                        val file = dataFolder.resolve("manageList.json")
-                        val list = jsonFormant.decodeFromString<ManageList>(file.readText())
-                        if (file.exists()) {
-                            return@SuggestionProvider list.list.map { it.identify }
-                        }
-                        return@SuggestionProvider arrayListOf<String>()
-                    }
-                }
-                return@registerSuggestionFactory null
-            }
-            null
-        }
-
         handler.setHelpWriter { command, _ ->
             java.lang.String.format(
                 """
@@ -70,7 +45,8 @@ class MinecraftPluginManager : JavaPlugin() {
         }
 
         with(handler) {
-            register(Command())
+            register(UpdateCommand())
+            register(RemoveUnmanaged())
         }
 
 
