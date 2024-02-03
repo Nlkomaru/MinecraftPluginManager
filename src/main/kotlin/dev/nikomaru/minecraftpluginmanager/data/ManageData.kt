@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 data class ManageData(
     val identify: String,
     val version: VersionData,
-    val repoId : String,
-    val download : DownloadData,
+    val repoId: String,
+    val download: DownloadData,
 )
 //  {
 //    "identify": "MinecraftPluginManager",
@@ -20,7 +20,7 @@ data class ManageData(
 data class VersionData(
     val currentVersion: String,
     val editedCurrentVersionByRegex: String,
-    val regex: String  = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$",
+    val regex: String = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$",
     val latestVersion: String,
     val editedLatestVersion: String
 )
@@ -35,11 +35,13 @@ data class VersionData(
 // urlの後ろには、/をつけない システムで弾く
 @Serializable
 data class DownloadData(
-    val url : String,
-    val downloadUrl : String,
+    val autoUpdate: Boolean,
+    val url: String,
+    val downloadUrl: String,
 )
 //  {
+//    "autoUpdate": true,
 //    "url": "https://github.com/Nlkomaru/MinecraftPluginManager",
-//    "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
+//    "downloadUrl": "<url>/releases/download/v<self.latestVersion>/MinecraftPluginManager_v<self.latestVersion>.jar"
 //  }
 

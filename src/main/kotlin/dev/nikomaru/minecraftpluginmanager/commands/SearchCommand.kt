@@ -5,5 +5,4 @@ import revxrsal.commands.bukkit.annotation.CommandPermission
 
 @Command("mpm")
 @CommandPermission("mpm.command")
-class SearchCommand {
-}
+class SearchCommand

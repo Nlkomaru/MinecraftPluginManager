@@ -33,6 +33,7 @@ dependencies {
     val junitVersion = "5.10.1"
     val mockkVersion = "1.13.9"
     val mockBukkitVersion = "3.65.0"
+    val ktorVersion = "2.3.8"
 
 
     compileOnly("io.papermc.paper:paper-api:$paperVersion")
@@ -53,11 +54,27 @@ dependencies {
 
     implementation("io.insert-koin:koin-core:$koinVersion")
 
+    library("io.ktor:ktor-client-core:$ktorVersion")
+    library("io.ktor:ktor-client-cio:$ktorVersion")
+    library("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    library("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    library("commons-io:commons-io:2.15.1")
+
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.20:$mockBukkitVersion")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
+
+    testImplementation("io.ktor:ktor-client-core:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-cio:$ktorVersion")
+    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    testImplementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    testImplementation("commons-io:commons-io:2.15.1")
+
 }
 
 java {
