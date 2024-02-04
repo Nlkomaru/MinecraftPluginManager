@@ -31,8 +31,7 @@ dependencies {
     val coroutineVersion = "1.7.3"
     val serializationVersion = "1.6.2"
     val junitVersion = "5.10.1"
-    val mockkVersion = "1.13.9"
-    val mockBukkitVersion = "3.65.0"
+    val mockBukkitVersion = "3.68.0"
     val ktorVersion = "2.3.8"
 
 
@@ -46,6 +45,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:$mccoroutineVersion")
     library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:$mccoroutineVersion")
@@ -63,7 +63,6 @@ dependencies {
 
     testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
     testImplementation("com.github.seeseemelk:MockBukkit-v1.20:$mockBukkitVersion")
-    testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
     testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")

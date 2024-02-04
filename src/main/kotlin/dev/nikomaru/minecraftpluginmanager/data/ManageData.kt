@@ -1,3 +1,12 @@
+/*
+ * Written in 2023-2024 by Nikomaru <nikomaru@nikomaru.dev>
+ *
+ * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.This software is distributed without any warranty.
+ *
+ * You should have received a copy of the CC0 Public Domain Dedication along with this software.
+ * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ */
+
 package dev.nikomaru.minecraftpluginmanager.data
 
 import kotlinx.serialization.Serializable
@@ -8,40 +17,27 @@ data class ManageData(
     val version: VersionData,
     val repoId: String,
     val download: DownloadData,
-)
-//  {
+) //  {
+
 //    "identify": "MinecraftPluginManager",
 //    "repoId": "https://github.com/Nlkomaru/MinecraftPluginManager/",
 //    "version": VersionData,
 //    "download": DownloadData
 //  }
-
 @Serializable
 data class VersionData(
-    val currentVersion: String,
-    val editedCurrentVersionByRegex: String,
-    val regex: String = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$",
-    val latestVersion: String,
-    val editedLatestVersion: String
-)
-//  {
-//    "currentVersion": "1.0.0",
-//    "editedCurrentVersionByRegex": "1.0.0",
-//    "regex": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?\$",
-//    "latestVersion": "1.0.0",
+    val editedCurrentVersion: String, val editedLatestVersion: String
+) //  {
+
+//    "editedCurrentVersion": "1.0.0",
 //    "editedLatestVersion": "1.0.0"
 //  }
-
 // urlの後ろには、/をつけない システムで弾く
 @Serializable
 data class DownloadData(
     val autoUpdate: Boolean,
-    val url: String,
     val downloadUrl: String,
-)
-//  {
-//    "autoUpdate": true,
-//    "url": "https://github.com/Nlkomaru/MinecraftPluginManager",
-//    "downloadUrl": "<url>/releases/download/v<self.latestVersion>/MinecraftPluginManager_v<self.latestVersion>.jar"
+) //  { //    "autoUpdate": true,
+//    "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
 //  }
 
