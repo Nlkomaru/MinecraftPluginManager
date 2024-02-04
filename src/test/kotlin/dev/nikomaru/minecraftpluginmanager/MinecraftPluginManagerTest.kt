@@ -26,7 +26,6 @@ class MinecraftPluginManagerTest: BeforeEachCallback, AfterEachCallback {
     override fun beforeEach(context: ExtensionContext) {
         println("beforeEach() executed before " + context.displayName + ".");
         server = MockBukkit.mock()
-
         setupKoin()
     }
 
