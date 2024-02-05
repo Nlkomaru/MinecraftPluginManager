@@ -5,7 +5,7 @@ plugins {
     kotlin("jvm") version "1.8.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.0.1"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
+    id("net.minecrell.plugin-yml.bukkit") version "0.6.0"
     kotlin("plugin.serialization") version "1.8.10"
 }
 group = "dev.nikomaru"
