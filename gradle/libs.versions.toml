@@ -1,0 +1,48 @@
+[versions]
+paper = "1.20.4-R0.1-SNAPSHOT"
+mccoroutine = "2.15.0"
+lamp = "3.2.1"
+koin = "3.5.6"
+coroutine = "1.8.0"
+serialization = "1.6.3"
+reflect = "2.0.0"
+ktor = "2.3.8"
+junit = "5.10.1"
+mockBukkit = "3.68.0"
+commonsIo = "2.15.1"
+
+[libraries]
+paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
+lamp-common = { group = "com.github.Revxrsal.Lamp", name = "common", version.ref = "lamp" }
+lamp-bukkit = { group = "com.github.Revxrsal.Lamp", name = "bukkit", version.ref = "lamp" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "reflect" }
+mccoroutine-bukkit-api = { group = "com.github.shynixn.mccoroutine", name = "mccoroutine-bukkit-api", version.ref = "mccoroutine" }
+mccoroutine-bukkit-core = { group = "com.github.shynixn.mccoroutine", name = "mccoroutine-bukkit-core", version.ref = "mccoroutine" }
+koin-core = { group = "io.insert-koin", name = "koin-core", version.ref = "koin" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+commons-io = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
+snakeyaml = { group = "org.yaml", name = "snakeyaml", version = "2.2" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine" }
+mock-bukkit = { group = "com.github.seeseemelk", name = "MockBukkit-v1.20", version.ref = "mockBukkit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
+koin-test = { group = "io.insert-koin", name = "koin-test", version.ref = "koin" }
+koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", version.ref = "koin" }
+
+[plugins]
+run-paper = { id = "xyz.jpenilla.run-paper", version = "2.2.3" }
+resource-factory = { id = "xyz.jpenilla.resource-factory", version = "1.1.1" }
+shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "1.9.24" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "1.9.23" }
+dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
+
+[bundles]
+commands = ["lamp-common", "lamp-bukkit"]
+coroutines = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core" , "kotlinx-coroutines-core"]
+ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
+koin-test = ["koin-test", "koin-test-junit5"]

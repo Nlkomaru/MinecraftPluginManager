@@ -1,12 +1,12 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
 plugins {
-    id("java")
-    kotlin("jvm") version "1.8.10"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("xyz.jpenilla.run-paper") version "2.0.1"
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.3"
-    kotlin("plugin.serialization") version "1.8.10"
+    java
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.run.paper)
+    alias(libs.plugins.resource.factory)
 }
 group = "dev.nikomaru"
 version = "1.0-SNAPSHOT"
@@ -24,99 +24,86 @@ repositories {
 
 
 dependencies {
-    val paperVersion = "1.20.4-R0.1-SNAPSHOT"
-    val mccoroutineVersion = "2.14.0"
-    val lampVersion = "3.1.8"
-    val koinVersion = "3.5.3"
-    val coroutineVersion = "1.7.3"
-    val serializationVersion = "1.6.2"
-    val junitVersion = "5.10.1"
-    val mockBukkitVersion = "3.68.0"
-    val ktorVersion = "2.3.8"
+    compileOnly(libs.paper.api)
 
+    implementation(libs.bundles.commands)
 
-    compileOnly("io.papermc.paper:paper-api:$paperVersion")
+    implementation(libs.kotlinx.serialization.json)
 
-    library(kotlin("stdlib"))
+    implementation(libs.bundles.coroutines)
 
-    implementation("com.github.Revxrsal.Lamp:common:$lampVersion")
-    implementation("com.github.Revxrsal.Lamp:bukkit:$lampVersion")
+    implementation(libs.bundles.ktor.client)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutineVersion")
+    implementation(libs.kotlin.reflect)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation(libs.commons.io)
+    implementation(libs.snakeyaml)
 
-    library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:$mccoroutineVersion")
-    library("com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:$mccoroutineVersion")
+    implementation(libs.koin.core)
 
-    library("org.yaml:snakeyaml:2.2")
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mock.bukkit)
 
-    implementation("io.insert-koin:koin-core:$koinVersion")
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.bundles.koin.test)
 
-    library("io.ktor:ktor-client-core:$ktorVersion")
-    library("io.ktor:ktor-client-cio:$ktorVersion")
-    library("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    library("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    testImplementation(libs.bundles.ktor.client)
 
-    library("commons-io:commons-io:2.15.1")
-
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutineVersion")
-    testImplementation("com.github.seeseemelk:MockBukkit-v1.20:$mockBukkitVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
-    testImplementation("io.insert-koin:koin-test:$koinVersion")
-    testImplementation("io.insert-koin:koin-test-junit5:$koinVersion")
-
-    testImplementation("io.ktor:ktor-client-core:$ktorVersion")
-    testImplementation("io.ktor:ktor-client-cio:$ktorVersion")
-    testImplementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    testImplementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
-    testImplementation("commons-io:commons-io:2.15.1")
-
+    testImplementation(libs.commons.io)
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-
+kotlin {
+    jvmToolchain {
+        (this).languageVersion.set(JavaLanguageVersion.of(21))
+    }
+    jvmToolchain(21)
 }
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
         kotlinOptions.javaParameters = true
     }
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.jvmTarget = "21"
     }
     build {
-        dependsOn(shadowJar)
+        dependsOn("shadowJar")
     }
-    runServer {
-        minecraftVersion("1.20.4")
-    }
+    shadowJar
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
-    test {
-        useJUnitPlatform()
-        testLogging {
-            showStandardStreams = true
-            events("passed", "skipped", "failed")
-            exceptionFormat = TestExceptionFormat.FULL
+    runServer {
+        minecraftVersion("1.20.6")
+        val plugins = runPaper.downloadPluginsSpec {}
+        downloadPlugins{
+            downloadPlugins.from(plugins)
         }
     }
 }
 
+sourceSets.main {
+    resourceFactory {
+        bukkitPluginYaml {
+            name = "MinecraftPluginManager"
+            version = "miencraft_plugin_version"
+            website = "https://github.com/Nlkomaru/MinecraftPluginManager"
+            main = "$group.minecraftpluginmanager.MinecraftPluginManager"
+            apiVersion = "1.20"
+            libraries = libs.bundles.coroutines.asString()
+            softDepend = listOf()
+        }
+    }
+}
 
-bukkit {
-    name = "MinecraftPluginManager" // need to change
-    version = "minecraft_plugin_version"
-    website = "https://github.com/Nlkomaru/MinecraftPluginManager"  // need to change
+fun Provider<MinimalExternalModuleDependency>.asString(): String {
+    val dependency = this.get()
+    return dependency.module.toString() + ":" + dependency.versionConstraint.toString()
+}
 
-    main = "$group.minecraftpluginmanager.MinecraftPluginManager"  // need to change
-
-    apiVersion = "1.19"
-    libraries = listOf("com.github.shynixn.mccoroutine:mccoroutine-bukkit-api:2.11.0",
-        "com.github.shynixn.mccoroutine:mccoroutine-bukkit-core:2.11.0")
+fun Provider<ExternalModuleDependencyBundle>.asString(): List<String> {
+    return this.get().map { dependency ->
+        "${dependency.group}:${dependency.name}:${dependency.version}"
+    }
 }
