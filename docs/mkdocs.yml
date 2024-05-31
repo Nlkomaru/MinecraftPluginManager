@@ -31,8 +31,6 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
 plugins:
-  - render_swagger:
-      allow_arbitrary_locations: true
   - search:
       lang: en
   - i18n:
