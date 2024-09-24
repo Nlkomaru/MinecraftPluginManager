@@ -26,7 +26,7 @@ ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 commons-io = { group = "commons-io", name = "commons-io", version.ref = "commonsIo" }
-snakeyaml = { group = "org.yaml", name = "snakeyaml", version = "2.2" }
+snakeyaml = { group = "org.yaml", name = "snakeyaml", version = "2.3" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutine" }
 mock-bukkit = { group = "com.github.seeseemelk", name = "MockBukkit-v1.20", version.ref = "mockBukkit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junit" }
