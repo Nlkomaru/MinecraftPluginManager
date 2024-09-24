@@ -8,7 +8,7 @@ serialization = "1.6.3"
 reflect = "2.0.0"
 ktor = "2.3.12"
 junit = "5.10.1"
-mockBukkit = "3.88.1"
+mockBukkit = "3.93.2"
 commonsIo = "2.16.1"
 
 [libraries]
