@@ -28,9 +28,9 @@ class InstallCommand: KoinComponent {
         }
         if (repositoryUrl.last() == '/') {
             repositoryUrl.dropLast(1)
-        }
-
-        DownloadManager().download(repositoryUrl, number)
+        } else {
+            repositoryUrl
+        }.let { DownloadManager().download(it, number) }
     }
 
 }

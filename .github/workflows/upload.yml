@@ -20,24 +20,19 @@ jobs:
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
 
-      - name: change plugin.yml version
-        run: |
-          before="${{ github.event.release.tag_name }}"
-          after="${before//v/}"
-          sed -i -e "s/miencraft_plugin_version/$after/i" './build.gradle.kts'
-          cat ./build.gradle.kts
+      - name: Set plugin version
+        run: sed -i "s/versionPlaceholder/${{ github.event.release.tag_name }}/g" ./build.gradle.kts
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: ./gradlew clean build -x test
+
+      - name: Rename jar
+        run: mv ./build/libs/MinecraftPluginManager-1.0-SNAPSHOT-all.jar ./build/libs/MinecraftPluginManager_${{ github.event.release.tag_name }}.jar
 
       - name: Upload release
-        uses: actions/upload-release-asset@v1
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./build/libs/MinecraftPluginManager_${{ github.event.release.tag_name }}.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./build/libs/MinecraftPluginManager-1.0-SNAPSHOT-all.jar
-          asset_name: MinecraftPluginManager_${{ github.event.release.tag_name }}.jar
-          asset_content_type: application/jar
-
 

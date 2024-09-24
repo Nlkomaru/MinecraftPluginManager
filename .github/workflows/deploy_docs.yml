@@ -20,20 +20,4 @@ jobs:
       - run: |
           pip install mkdocs-material
           pip install mkdocs-static-i18n[material]
-      - run: git pull
-#      - uses: actions/setup-java@v4
-#        with:
-#          distribution: 'temurin'
-#          java-version: '21'
-#          cache: 'gradle'
-#
-#      - name: Change wrapper permissions
-#        run: chmod +x ./gradlew
-#
-#      - name: Build with Gradle
-#        run: ./gradlew :api:dokkaHtml
-#
-#      - name: Copy dokkaHtml to docs
-#        run: cp -r ./api/build/dokka/html ./docs/docs/dokka
-
-      - run: mkdocs gh-deploy --config-file ./docs/mkdocs.yml
+      - run: mkdocs gh-deploy --force --config-file ./docs/mkdocs.yml

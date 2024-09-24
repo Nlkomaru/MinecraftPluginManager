@@ -19,11 +19,12 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.encodeToString
-import org.codehaus.plexus.util.FileUtils
+import org.apache.commons.io.FileUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
 import java.net.URL
+
 
 object DownloaderUtils: KoinComponent {
     private val plugin: MinecraftPluginManager by inject()

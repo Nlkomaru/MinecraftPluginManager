@@ -7,15 +7,13 @@
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-package dev.nikomaru.minecraftpluginmanager.repository.downloader
+package dev.nikomaru.minecraftpluginmanager.repository.downloader.abstract
 
-sealed class UrlData {
-    data class GithubUrlData(val owner: String, val repository: String): UrlData()
+import dev.nikomaru.minecraftpluginmanager.repository.downloader.UrlData
 
-    data class SpigotmcUrlData(val resId: String): UrlData()
+abstract class AbstractDownloader {
+    abstract suspend fun download(data: UrlData, number: Int?)
 
-    data class HangarUrlData(val owner: String, val projectName: String): UrlData()
-
-    data class ModrinthUrlData(val projectName: String): UrlData()
+    abstract suspend fun getLatestVersion(data: UrlData): String
 
 }

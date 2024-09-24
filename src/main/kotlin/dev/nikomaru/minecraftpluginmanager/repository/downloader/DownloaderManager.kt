@@ -24,28 +24,29 @@ class DownloadManager {
 
     fun getURLData(url: String): UrlData {
         val type = getType(url)!!
+        val formattedUrl = if (url.endsWith("/")) url.dropLast(1) else url
         return when (type) {
             RepositoryType.GITHUB -> {
-                val split = url.split("/")
+                val split = formattedUrl.split("/")
                 val owner = split[3]
                 val repository = split[4]
                 UrlData.GithubUrlData(owner, repository)
             }
 
             RepositoryType.SPIGOTMC -> {
-                val split = url.split("/")
-                val id = split[4]
-                UrlData.SpigotmcUrlData(id)
+                val resId = formattedUrl.split(".")[(url.split(".").size - 1)]
+                UrlData.SpigotmcUrlData(resId)
             }
 
             RepositoryType.HANGER -> {
-                val split = url.split("/")
-                val id = split[4]
-                UrlData.HangarUrlData(id)
+                val split = formattedUrl.split("/")
+                val owner = split[3]
+                val projectName = split[4]
+                UrlData.HangarUrlData(owner, projectName)
             }
 
             RepositoryType.MODRINTH -> {
-                val split = url.split("/")
+                val split = formattedUrl.split("/")
                 val id = split[4]
                 UrlData.ModrinthUrlData(id)
             }
@@ -55,11 +56,21 @@ class DownloadManager {
     suspend fun download(url: String, number: Int?) {
         val type = getType(url) ?: return
         when (type) {
-            RepositoryType.GITHUB -> GithubDownloader().download(
-                getURLData(url) as UrlData.GithubUrlData, number
-            )
+            RepositoryType.GITHUB -> {
+                GithubDownloader().download(
+                    getURLData(url) as UrlData.GithubUrlData, number
+                )
+            }
 
-            else -> {
+            RepositoryType.SPIGOTMC -> {
+                getURLData(url) as UrlData.SpigotmcUrlData
+            }
+
+            RepositoryType.HANGER -> {
+                println("Not implemented")
+            }
+
+            RepositoryType.MODRINTH -> {
                 println("Not implemented")
             } //            -> SpigotmcDownloader().download(getURLData(url) as UrlData.SpigotmcUrlData)
             //            RepositoryType.HANGER -> HangarDownloader().download(getURLData(url) as UrlData.HangarUrlData)
