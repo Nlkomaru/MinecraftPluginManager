@@ -14,6 +14,7 @@ import dev.nikomaru.minecraftpluginmanager.data.DownloadData
 import dev.nikomaru.minecraftpluginmanager.data.ManageData
 import dev.nikomaru.minecraftpluginmanager.data.VersionData
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.UrlData
+import dev.nikomaru.minecraftpluginmanager.repository.downloader.abstract.AbstractDownloader
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.utils.DownloaderUtils
 import io.ktor.client.call.*
 import io.ktor.client.request.*
@@ -23,10 +24,11 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 
-class GithubDownloader: KoinComponent {
+class GithubDownloader: KoinComponent, AbstractDownloader() {
     private val plugin: MinecraftPluginManager by inject()
-    suspend fun download(data: UrlData.GithubUrlData, number: Int?) {
+    override suspend fun download(data: UrlData, number: Int?) {
         plugin.logger.info("Downloading from github...")
+        data as UrlData.GithubUrlData
         val release = getData(data)
         val name = data.repository
         val version = release.tagName.replace("v", "")
@@ -34,7 +36,7 @@ class GithubDownloader: KoinComponent {
         plugin.logger.info("Latest version: $version")
         val assets = release.assets
         if (assets.isEmpty()) {
-            plugin.logger.info("No assets found")
+            plugin.logger.info("アセットが見つかりません")
             return
         }
         val assetUrl: String = if (assets.size != 1) {
@@ -46,19 +48,24 @@ class GithubDownloader: KoinComponent {
                 return
             }
             if (number > assets.size) {
-                println("Invalid number")
+                println("指定された番号のアセットが見つかりません")
                 return
             }
-            plugin.logger.info("Downloading ${assets[number].name}")
+            plugin.logger.info("${assets[number].name} をダウンロードしています...")
             assets[number].browserDownloadUrl
         } else {
-            plugin.logger.info("Downloading ${assets[0].name}")
+            plugin.logger.info("${assets[0].name} をダウンロードしています...")
             assets[0].browserDownloadUrl
         }
         val file = plugin.dataFolder.parentFile.resolve("${name}-${version}.jar")
         val manageData = generateDownloadData(assetUrl, data, version, name)
         DownloaderUtils.download(assetUrl, file, manageData)
     }
+
+    override suspend fun getLatestVersion(data: UrlData): String {
+        return getData(data as UrlData.GithubUrlData).tagName.replace("v", "")
+    }
+
 
     private fun generateDownloadData(
         assetUrl: String, data: UrlData.GithubUrlData, version: String, name: String
