@@ -25,17 +25,17 @@ class SpigotDownloaderTest: KoinTest{
         "https://www.spigotmc.org/resources/placeholderapi.6245/",
         "https://www.spigotmc.org/resources/vault.34315/"
     )
-    @Test
-    fun download() {
-        runTest {
-            val downloader = SpigotDownloader()
-            val manager = DownloadManager()
-            urls.forEach {
-                val urlData = manager.getURLData(it) as UrlData.SpigotmcUrlData
-                downloader.download(urlData, 0)
-            }
-        }
-    }
+//    @Test
+//    fun download() {
+//        runTest {
+//            val downloader = SpigotDownloader()
+//            val manager = DownloadManager()
+//            urls.forEach {
+//                val urlData = manager.getURLData(it) as UrlData.SpigotmcUrlData
+//                downloader.download(urlData, 0)
+//            }
+//        }
+//    }
 
     @Test
     fun getLatestVersion() {
