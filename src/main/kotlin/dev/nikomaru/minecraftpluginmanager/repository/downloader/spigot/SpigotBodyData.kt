@@ -24,15 +24,12 @@ data class SpigotBodyData(
 
 @Serializable
 data class Rating(
-    val count: Int,
-    val average: Double
+    val count: Int, val average: Double
 )
 
 @Serializable
 data class SpigotDataDetails(
-    val name: String,
-    val tag: String,
-    val file : SpigotDataDetailsFile
+    val name: String, val tag: String, val file: SpigotDataDetailsFile
 )
 
 @Serializable

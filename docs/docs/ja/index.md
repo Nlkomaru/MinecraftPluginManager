@@ -1,4 +1,4 @@
-# ようこそ！ Minecraft Plugin Managerへ
+# 初めに
 このプラグインは、Minecraftサーバーのプラグインを管理するためのプラグインです。
 
 ## 注意

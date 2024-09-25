@@ -9,22 +9,22 @@
 
 package dev.nikomaru.minecraftpluginmanager.commands
 
-import revxrsal.commands.annotation.Command
-import revxrsal.commands.annotation.Description
-import revxrsal.commands.annotation.Subcommand
-import revxrsal.commands.bukkit.annotation.CommandPermission
-import revxrsal.commands.command.CommandActor
+import org.bukkit.command.CommandSender
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.CommandDescription
+import org.incendo.cloud.annotations.Permission
+
 
 @Command("mpm")
-@CommandPermission("mpm.command")
+@Permission("mpm.command")
 class LockCommand {
-    @Subcommand("lock")
-    @Description("プラグインをロックします。 ロックをしたプラグインは、`mpm outdatedAll`で更新されません。")
-    fun lock(actor: CommandActor) {
+    @Command("lock")
+    @CommandDescription("プラグインをロックします。 ロックをしたプラグインは、`mpm outdatedAll`で更新されません。")
+    fun lock(actor: CommandSender) {
     }
 
-    @Subcommand("unlock")
-    @Description("プラグインのロックを解除します。")
-    fun unlock(actor: CommandActor) {
+    @Command("unlock")
+    @CommandDescription("プラグインのロックを解除します。")
+    fun unlock(actor: CommandSender) {
     }
 }

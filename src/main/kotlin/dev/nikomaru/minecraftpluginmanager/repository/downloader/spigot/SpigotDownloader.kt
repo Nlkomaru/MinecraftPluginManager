@@ -31,8 +31,7 @@ class SpigotDownloader: AbstractDownloader(), KoinComponent {
         val versionData = VersionData(getLatestVersion(data), getLatestVersion(data))
         val repoId = "https://www.spigotmc.org/${details.file.url.split("/").subList(0, 2).joinToString("/")}"
         val downloadData = DownloadData(
-            true,
-            "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.editedLatestVersion>/download"
+            true, "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.editedLatestVersion>/download"
         )
         DownloaderUtils.download(url, file, ManageData(details.name, versionData, repoId, downloadData))
     }

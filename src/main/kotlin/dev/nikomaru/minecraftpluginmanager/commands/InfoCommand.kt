@@ -14,21 +14,22 @@ import dev.nikomaru.minecraftpluginmanager.data.PluginData
 import dev.nikomaru.minecraftpluginmanager.utils.PluginDataUtils
 import dev.nikomaru.minecraftpluginmanager.value.PluginName
 import org.bukkit.command.CommandSender
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.Permission
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import revxrsal.commands.annotation.Command
-import revxrsal.commands.annotation.Subcommand
-import revxrsal.commands.bukkit.annotation.CommandPermission
+import java.io.File
 
 @Command("mpm")
-@CommandPermission("mpm.command")
+@Permission("mpm.command")
 class InfoCommand: KoinComponent {
     private val plugin: MinecraftPluginManager by inject()
 
-    @Subcommand("info")
-    fun info(actor: CommandSender, pluginName: PluginName) {
+    @Command("info <plugin>")
+    fun info(actor: CommandSender,@Argument("plugin") pluginName: PluginName) {
         val name = pluginName.name
-        val folder = plugin.dataFolder
+        val folder = plugin.dataFolder.parentFile
         val pluginFile = folder.listFiles()?.filter { it.name.endsWith(".jar") }?.find {
             when (val data = PluginDataUtils.getPluginData(it)) {
                 is PluginData.BukkitPluginData -> {
@@ -45,37 +46,49 @@ class InfoCommand: KoinComponent {
             }
         }
         val pluginData = pluginFile?.let { PluginDataUtils.getPluginData(it) }
-        val message: String = when (pluginData) {
-            is PluginData.BukkitPluginData -> {
-                """
-                    プラグイン名: ${pluginData.name}
-                    バージョン: ${pluginData.version}
-                    メインクラス: ${pluginData.main}
-                    説明: ${pluginData.description}
-                    作者: ${pluginData.author}
-                    ウェブサイト: ${pluginData.website}
-                    APIバージョン: ${pluginData.apiVersion}
-                """.trimIndent()
-            }
-
-            is PluginData.PaperPluginData -> {
-                """
-                    プラグイン名: ${pluginData.name}
-                    バージョン: ${pluginData.version}
-                    メインクラス: ${pluginData.main}
-                    説明: ${pluginData.description}
-                    APIバージョン: ${pluginData.apiVersion}
-                    ブートストラッパー: ${pluginData.bootstrapper}
-                    ローダー: ${pluginData.loader}
-                    作者: ${pluginData.author}
-                    ウェブサイト: ${pluginData.website}
-                """.trimIndent()
-            }
-
-            else -> {
-                "プラグインの情報を取得できませんでした。"
-            }
-        }
+        val message: String = pluginToMessage(pluginData)
         actor.sendRichMessage(message)
+    }
+
+    @Command("jarinfo <file>")
+    fun jarInfo(sender: CommandSender,@Argument("file") file: File) {
+        println(file)
+        val data = PluginDataUtils.getPluginData(file)
+        val message: String = pluginToMessage(data)
+        sender.sendRichMessage(message)
+    }
+
+
+
+    private fun pluginToMessage(data: PluginData?) = when (data) {
+        is PluginData.BukkitPluginData -> {
+            """
+            プラグイン名: ${data.name}
+            バージョン: ${data.version}
+            メインクラス: ${data.main}
+            説明: ${data.description}
+            作者: ${data.author}
+            ウェブサイト: ${data.website}
+            APIバージョン: ${data.apiVersion}
+            """.trimIndent()
+        }
+
+        is PluginData.PaperPluginData -> {
+            """
+            プラグイン名: ${data.name}
+            バージョン: ${data.version}
+            メインクラス: ${data.main}
+            説明: ${data.description}
+            APIバージョン: ${data.apiVersion}
+            ブートストラッパー: ${data.bootstrapper}
+            ローダー: ${data.loader}
+            作者: ${data.author}
+            ウェブサイト: ${data.website}
+            """.trimIndent()
+        }
+
+        else -> {
+            "プラグインの情報を取得できませんでした。"
+        }
     }
 }

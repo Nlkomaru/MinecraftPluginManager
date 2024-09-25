@@ -10,11 +10,17 @@
 package dev.nikomaru.minecraftpluginmanager
 
 import dev.nikomaru.minecraftpluginmanager.commands.*
+import dev.nikomaru.minecraftpluginmanager.commands.utils.parser.FileParser
+import org.bukkit.command.CommandSender
+import org.bukkit.command.defaults.HelpCommand
 import org.bukkit.plugin.java.JavaPlugin
+import org.incendo.cloud.annotations.AnnotationParser
+import org.incendo.cloud.execution.ExecutionCoordinator
+import org.incendo.cloud.paper.LegacyPaperCommandManager
+import org.incendo.cloud.setting.ManagerSetting
 import org.koin.core.context.GlobalContext
 import org.koin.dsl.module
-import revxrsal.commands.bukkit.BukkitCommandHandler
-import revxrsal.commands.ktx.supportSuspendFunctions
+
 
 open class MinecraftPluginManager: JavaPlugin() {
     override fun onEnable() { // Plugin startup logic
@@ -36,28 +42,19 @@ open class MinecraftPluginManager: JavaPlugin() {
     }
 
     private fun setCommand() {
-        val handler = BukkitCommandHandler.create(this)
+        val commandManager = LegacyPaperCommandManager.createNative(
+                this,
+        ExecutionCoordinator.simpleCoordinator()
+        )
 
-        handler.setSwitchPrefix("--")
-        handler.setFlagPrefix("--")
-        handler.supportSuspendFunctions()
-        handler.enableAdventure()
+        commandManager.settings().set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true)
 
-        handler.setHelpWriter { command, _ ->
-            java.lang.String.format(
-                """
-                <color:yellow>コマンド: <color:gray>%s %s
-                <color:yellow>説明: <color:gray>%s
-                
-                """.trimIndent(),
-                command.path.toRealString(),
-                command.usage,
-                command.description,
-            )
-        }
+        commandManager.parserRegistry().registerParser(FileParser.fileParser())
 
-        with(handler) {
-            register(
+        val annotationParser = AnnotationParser(commandManager, CommandSender::class.java)
+
+        with(annotationParser) {
+            parse(
                 HelpCommand(),
                 InfoCommand(),
                 InstallCommand(),
@@ -65,7 +62,7 @@ open class MinecraftPluginManager: JavaPlugin() {
                 LockCommand(),
                 OutdatedCommand(),
                 ReloadCommand(),
-                RemoveUnmanaged(),
+                RemoveUnmanagedCommand(),
                 SearchCommand(),
                 UpdateCommand(),
                 VersionCommand()
