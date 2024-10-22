@@ -1,16 +1,16 @@
 [versions]
-paper = "1.20.6-R0.1-SNAPSHOT"
-mccoroutine = "2.15.0"
 cloud = "2.1.0-SNAPSHOT"
 cloudPaper = "2.0.0-SNAPSHOT"
-koin = "3.5.6"
+paper = "1.21.1-R0.1-SNAPSHOT"
+mccoroutine = "2.20.0"
+koin = "4.0.0"
 coroutine = "1.9.0"
-serialization = "1.6.3"
-reflect = "2.0.0"
-ktor = "2.3.12"
-junit = "5.10.1"
+serialization = "1.7.3"
+reflect = "2.0.21"
+ktor = "3.0.0"
+junit = "5.11.2"
 mockBukkit = "3.93.2"
-commonsIo = "2.16.1"
+commonsIo = "2.17.0"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
@@ -39,8 +39,8 @@ koin-test-junit5 = { group = "io.insert-koin", name = "koin-test-junit5", versio
 run-paper = { id = "xyz.jpenilla.run-paper", version = "2.3.1" }
 resource-factory = { id = "xyz.jpenilla.resource-factory", version = "1.2.0" }
 shadow = { id = "com.github.johnrengelman.shadow", version = "8.1.1" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.20" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.0.20" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.21" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.0.21" }
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 
 [bundles]
