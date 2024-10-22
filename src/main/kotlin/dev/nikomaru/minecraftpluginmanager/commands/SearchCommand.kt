@@ -9,9 +9,10 @@
 
 package dev.nikomaru.minecraftpluginmanager.commands
 
-import revxrsal.commands.annotation.Command
-import revxrsal.commands.bukkit.annotation.CommandPermission
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.Permission
+
 
 @Command("mpm")
-@CommandPermission("mpm.command")
+@Permission("mpm.command")
 class SearchCommand

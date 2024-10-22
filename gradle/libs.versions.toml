@@ -1,7 +1,8 @@
 [versions]
+cloud = "2.1.0-SNAPSHOT"
+cloudPaper = "2.0.0-SNAPSHOT"
 paper = "1.21.1-R0.1-SNAPSHOT"
 mccoroutine = "2.20.0"
-lamp = "3.3.0"
 koin = "4.0.0"
 coroutine = "1.9.0"
 serialization = "1.7.3"
@@ -13,8 +14,9 @@ commonsIo = "2.17.0"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
-lamp-common = { group = "com.github.Revxrsal.Lamp", name = "common", version.ref = "lamp" }
-lamp-bukkit = { group = "com.github.Revxrsal.Lamp", name = "bukkit", version.ref = "lamp" }
+cloud = { module = "org.incendo:cloud-core", version.ref = "cloud" }
+cloud-annotations = { module = "org.incendo:cloud-annotations", version.ref = "cloud" }
+cloudPaper = { module = "org.incendo:cloud-paper", version.ref = "cloudPaper" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "reflect" }
@@ -42,7 +44,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 
 [bundles]
-commands = ["lamp-common", "lamp-bukkit"]
+commands = ["cloud", "cloudPaper", "cloud-annotations"]
 coroutines = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core" , "kotlinx-coroutines-core"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
 koin-test = ["koin-test", "koin-test-junit5"]

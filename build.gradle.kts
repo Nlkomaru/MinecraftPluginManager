@@ -1,4 +1,6 @@
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
     java
@@ -61,21 +63,21 @@ kotlin {
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = "21"
-        kotlinOptions.javaParameters = true
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
+        compilerOptions.javaParameters = true
+        compilerOptions.languageVersion.set(KotlinVersion.KOTLIN_2_0)
     }
     compileTestKotlin {
-        kotlinOptions.jvmTarget = "21"
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
     }
     build {
-        dependsOn("shadowJar")
+        dependsOn(shadowJar)
     }
-    shadowJar
     withType<JavaCompile>().configureEach {
         options.encoding = "UTF-8"
     }
     runServer {
-        minecraftVersion("1.20.6")
+        minecraftVersion("1.21")
         val plugins = runPaper.downloadPluginsSpec {}
         downloadPlugins{
             downloadPlugins.from(plugins)

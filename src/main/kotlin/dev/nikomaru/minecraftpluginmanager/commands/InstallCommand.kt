@@ -11,17 +11,22 @@ package dev.nikomaru.minecraftpluginmanager.commands
 
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.DownloadManager
 import org.bukkit.command.ConsoleCommandSender
+import org.incendo.cloud.annotations.Argument
+import org.incendo.cloud.annotations.Command
+import org.incendo.cloud.annotations.Default
+import org.incendo.cloud.annotations.Permission
 import org.koin.core.component.KoinComponent
-import revxrsal.commands.annotation.Command
-import revxrsal.commands.annotation.Optional
-import revxrsal.commands.annotation.Subcommand
-import revxrsal.commands.bukkit.annotation.CommandPermission
+
 
 @Command("mpm")
-@CommandPermission("mpm.command")
+@Permission("mpm.command")
 class InstallCommand: KoinComponent {
-    @Subcommand("install")
-    suspend fun install(sender: ConsoleCommandSender, repositoryUrl: String, @Optional number: Int?) {
+    @Command("install <repositoryUrl> [number]")
+    suspend fun install(
+        sender: ConsoleCommandSender,
+        @Argument("repositoryUrl") repositoryUrl: String,
+        @Argument("number") @Default("1") number: Int?
+    ) {
         if (repositoryUrl.isEmpty()) {
             sender.sendMessage("リポジトリのURLを入力してください")
             return

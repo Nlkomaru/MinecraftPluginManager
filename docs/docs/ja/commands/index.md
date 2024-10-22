@@ -1,4 +1,4 @@
-## Commands
+# コマンド
 
 `mpm install <url>`
 urlからプラグインをインストールします。
