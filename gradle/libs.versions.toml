@@ -10,7 +10,7 @@ reflect = "2.0.21"
 ktor = "3.0.1"
 junit = "5.11.3"
 mockBukkit = "3.93.2"
-commonsIo = "2.17.0"
+commonsIo = "2.18.0"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
