@@ -1,49 +1,50 @@
 # コマンド
 
-`mpm install <url>`
-urlからプラグインをインストールします。
-github, spigot, dev.bukkit, hanger, modrinthに対応しています。
+- [x] `mpm install <url>`<br>
+urlからプラグインをインストールします。<br>
+github, jenkins, dev.bukkit, hanger, modrinthに対応しています。
 
-`mpm uninstall <plugin>`
-プラグインをアンインストールします。
 
-`mpm list [--lock]`
-インストールされているプラグインの一覧を表示します。
+- [ ] `mpm uninstall <plugin>`<br>
+プラグインをアンインストールします。<br>
+
+- [ ] `mpm list [--lock]`<br>
+インストールされているプラグインの一覧を表示します。<br>
 `--lock`をつけるとロックされているプラグインの一覧を表示します。
 
-`mpm outdated <plugin>`
-プラグインの更新を確認します。
+- [ ] `mpm outdated <plugin>`<br>
+プラグインの更新を確認します。<br>
 
-`mpm outdatedAll`
-インストールされているプラグインの更新を確認します。
+- [ ] `mpm outdatedAll`<br>
+インストールされているプラグインの更新を確認します。<br>
 
-`mpm update`
-/mpm outdated によって新しいバージョンがあるとされたプラグインを更新します。
+- [ ] `mpm update`<br>
+/mpm outdated によって新しいバージョンがあるとされたプラグインを更新します。<br>
 
-`mpm help`
-ヘルプを表示します。
+- [ ] `mpm help`<br>
+ヘルプを表示します。<br>
 
-`mpm version`
-バージョンを表示します。
+- [x] `mpm version`<br>
+バージョンを表示します。<br>
 
-`mpm reload`
-コンフィグをリロードします。
+- [ ] `mpm reload`<br>
+コンフィグをリロードします。<br>
 
-`mpm info <plugin>`
-プラグインの情報を表示します。
+- [x] `mpm info <plugin>`<br>
+プラグインの情報を表示します。<br>
 
-`mpm search <plugin>`
-プラグインを検索します。
+- [ ] `mpm search <plugin>`<br>
+プラグインを検索します。<br>
 
-`mpm lock <plugin>`
-プラグインをロックします。
-ロックをしたプラグインは、`mpm outdatedAll`で更新されません。
+- [ ] `mpm lock <plugin>`<br>
+プラグインをロックします。<br>
+ロックをしたプラグインは、`mpm outdatedAll`で更新されません。<br>
 
-`mpm unlock <plugin>`
-プラグインのロックを解除します。
+- [ ] `mpm unlock <plugin>`<br>
+プラグインのロックを解除します。<br>
 
-`mpm removeUnmanaged [--force]`
-mpm管理下にないプラグインを削除します。
+- [ ] `mpm removeUnmanaged [--force]`<br>
+mpm管理下にないプラグインを削除します。<br>
 `--force`をつけると確認なしで削除します。
 
 

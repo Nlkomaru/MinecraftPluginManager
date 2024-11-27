@@ -35,11 +35,9 @@ class InfoCommand: KoinComponent {
                 is PluginData.BukkitPluginData -> {
                     data.name == name
                 }
-
                 is PluginData.PaperPluginData -> {
                     data.name == name
                 }
-
                 else -> {
                     false
                 }
@@ -57,7 +55,6 @@ class InfoCommand: KoinComponent {
         val message: String = pluginToMessage(data)
         sender.sendRichMessage(message)
     }
-
 
 
     private fun pluginToMessage(data: PluginData?) = when (data) {

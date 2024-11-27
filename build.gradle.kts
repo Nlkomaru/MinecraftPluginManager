@@ -79,7 +79,7 @@ tasks {
     runServer {
         minecraftVersion("1.21")
         val plugins = runPaper.downloadPluginsSpec {}
-        downloadPlugins{
+        downloadPlugins {
             downloadPlugins.from(plugins)
         }
     }

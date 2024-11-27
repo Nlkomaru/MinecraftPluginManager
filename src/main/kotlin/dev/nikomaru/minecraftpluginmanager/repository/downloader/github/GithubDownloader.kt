@@ -26,14 +26,14 @@ import org.koin.core.component.inject
 
 class GithubDownloader: KoinComponent, AbstractDownloader() {
     private val plugin: MinecraftPluginManager by inject()
-    override suspend fun download(data: UrlData, number: Int?) {
+
+    override suspend fun downloadByVersion(data: UrlData, version: String, number: Int?) {
         plugin.logger.info("Downloading from github...")
         data as UrlData.GithubUrlData
-        val release = getData(data)
+        val release = getData(data, version)
         val name = data.repository
-        val version = release.tagName.replace("v", "")
-
-        plugin.logger.info("Latest version: $version")
+        val tag = release.tagName.replace("v", "")
+        plugin.logger.info("Latest version: $tag")
         val assets = release.assets
         if (assets.isEmpty()) {
             plugin.logger.info("アセットが見つかりません")
@@ -57,13 +57,17 @@ class GithubDownloader: KoinComponent, AbstractDownloader() {
             plugin.logger.info("${assets[0].name} をダウンロードしています...")
             assets[0].browserDownloadUrl
         }
-        val file = plugin.dataFolder.parentFile.resolve("${name}-${version}.jar")
-        val manageData = generateDownloadData(assetUrl, data, version, name)
+        val file = plugin.dataFolder.parentFile.resolve("${name}-${tag}.jar")
+        val manageData = generateDownloadData(assetUrl, data, tag, name)
         DownloaderUtils.download(assetUrl, file, manageData)
     }
 
-    override suspend fun getLatestVersion(data: UrlData): String {
-        return getData(data as UrlData.GithubUrlData).tagName.replace("v", "")
+    override suspend fun getVersions(data: UrlData): List<String> = withContext(Dispatchers.IO) {
+        val client = DownloaderUtils.client
+        data as UrlData.GithubUrlData
+        val url = "https://api.github.com/repos/${data.owner}/${data.repository}/releases"
+        val response = client.get(url).body<List<GithubRelease>>()
+        return@withContext response.map { it.tagName }
     }
 
 
@@ -87,9 +91,9 @@ class GithubDownloader: KoinComponent, AbstractDownloader() {
         return manageData
     }
 
-    suspend fun getData(data: UrlData.GithubUrlData): GithubRelease = withContext(Dispatchers.IO) {
+    suspend fun getData(data: UrlData.GithubUrlData, version: String): GithubRelease = withContext(Dispatchers.IO) {
         val client = DownloaderUtils.client
-        val url = "https://api.github.com/repos/${data.owner}/${data.repository}/releases/latest"
+        val url = "https://api.github.com/repos/${data.owner}/${data.repository}/releases/tags/${version}"
         val response = client.get(url).body<GithubRelease>()
         return@withContext response
     }
