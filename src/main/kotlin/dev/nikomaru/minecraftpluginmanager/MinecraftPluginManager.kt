@@ -11,11 +11,13 @@ package dev.nikomaru.minecraftpluginmanager
 
 import dev.nikomaru.minecraftpluginmanager.commands.*
 import dev.nikomaru.minecraftpluginmanager.commands.utils.parser.FileParser
+import dev.nikomaru.minecraftpluginmanager.commands.utils.parser.PluginNameParser
 import org.bukkit.command.CommandSender
 import org.bukkit.command.defaults.HelpCommand
 import org.bukkit.plugin.java.JavaPlugin
 import org.incendo.cloud.annotations.AnnotationParser
 import org.incendo.cloud.execution.ExecutionCoordinator
+import org.incendo.cloud.kotlin.coroutines.annotations.installCoroutineSupport
 import org.incendo.cloud.paper.LegacyPaperCommandManager
 import org.incendo.cloud.setting.ManagerSetting
 import org.koin.core.context.GlobalContext
@@ -47,11 +49,14 @@ open class MinecraftPluginManager: JavaPlugin() {
         ExecutionCoordinator.simpleCoordinator()
         )
 
+
         commandManager.settings().set(ManagerSetting.ALLOW_UNSAFE_REGISTRATION, true)
 
         commandManager.parserRegistry().registerParser(FileParser.fileParser())
+        commandManager.parserRegistry().registerParser(PluginNameParser.pluginNameParser())
 
         val annotationParser = AnnotationParser(commandManager, CommandSender::class.java)
+        annotationParser.installCoroutineSupport()
 
         with(annotationParser) {
             parse(
@@ -61,7 +66,7 @@ open class MinecraftPluginManager: JavaPlugin() {
                 ListCommand(),
                 LockCommand(),
                 OutdatedCommand(),
-                ReloadCommand(),
+                LoadCommand(),
                 RemoveUnmanagedCommand(),
                 SearchCommand(),
                 UpdateCommand(),

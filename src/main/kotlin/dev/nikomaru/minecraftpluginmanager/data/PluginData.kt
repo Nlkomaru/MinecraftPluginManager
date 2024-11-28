@@ -36,4 +36,16 @@ sealed class PluginData {
         val author: String = "",
         val website: String = "",
     ): PluginData()
+
+    fun getPluginName(): String {
+        return when (this) {
+            is BukkitPluginData -> {
+                this.name
+            }
+
+            is PaperPluginData -> {
+                this.name
+            }
+        }
+    }
 }

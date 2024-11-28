@@ -7,12 +7,14 @@
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-package dev.nikomaru.minecraftpluginmanager.commands
+package dev.nikomaru.minecraftpluginmanager.utils.plugin.loader
 
-import org.incendo.cloud.annotations.Command
-import org.incendo.cloud.annotations.Permission
+import org.bukkit.Bukkit
+import org.bukkit.plugin.Plugin
 
+class BukkitPluginUnloader: PluginUnloader {
 
-@Command("mpm")
-@Permission("mpm.command")
-class ReloadCommand
+    override fun unloadPlugin(plugin: Plugin) {
+        TODO("Not yet implemented")
+    }
+}
