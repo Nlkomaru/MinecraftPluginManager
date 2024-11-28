@@ -1,8 +1,8 @@
 [versions]
 paper = "1.20.6-R0.1-SNAPSHOT"
 mccoroutine = "2.15.0"
-cloud = "2.1.0-SNAPSHOT"
-cloudPaper = "2.0.0-SNAPSHOT"
+cloud = "2.0.0"
+cloudPaper = "2.0.0-beta.10"
 koin = "3.5.6"
 coroutine = "1.9.0"
 serialization = "1.6.3"
@@ -14,9 +14,12 @@ commonsIo = "2.16.1"
 
 [libraries]
 paper-api = { group = "io.papermc.paper", name = "paper-api", version.ref = "paper" }
-cloud = { module = "org.incendo:cloud-core", version.ref = "cloud" }
-cloud-annotations = { module = "org.incendo:cloud-annotations", version.ref = "cloud" }
-cloudPaper = { module = "org.incendo:cloud-paper", version.ref = "cloudPaper" }
+cloud = { group = "org.incendo", name = "cloud-core", version.ref = "cloud" }
+cloud-annotations = { group = "org.incendo", name = "cloud-annotations", version.ref = "cloud" }
+cloudPaper = { group = "org.incendo", name = "cloud-paper", version.ref = "cloudPaper" }
+cloud-kotlin-extensions = {group = "org.incendo", name = "cloud-kotlin-extensions", version.ref = "cloud"}
+cloud-kotlin-coroutines = {group = "org.incendo", name = "cloud-kotlin-coroutines", version.ref = "cloud"}
+cloud-kotlin-coroutines-annotations = {group = "org.incendo", name = "cloud-kotlin-coroutines-annotations", version.ref = "cloud"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutine" }
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "reflect" }
@@ -45,7 +48,7 @@ dokka = { id = "org.jetbrains.dokka", version = "1.9.20" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA2" }
 
 [bundles]
-commands = ["cloud", "cloudPaper", "cloud-annotations"]
+commands = ["cloud", "cloudPaper", "cloud-annotations", "cloud-kotlin-extensions", "cloud-kotlin-coroutines", "cloud-kotlin-coroutines-annotations"]
 coroutines = ["mccoroutine-bukkit-api", "mccoroutine-bukkit-core" , "kotlinx-coroutines-core"]
 ktor-client = ["ktor-client-core", "ktor-client-cio", "ktor-client-content-negotiation", "ktor-serialization-kotlinx-json"]
 koin-test = ["koin-test", "koin-test-junit5"]

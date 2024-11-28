@@ -77,8 +77,10 @@ tasks {
         options.encoding = "UTF-8"
     }
     runServer {
-        minecraftVersion("1.21")
-        val plugins = runPaper.downloadPluginsSpec {}
+        minecraftVersion("1.21.3")
+        val plugins = runPaper.downloadPluginsSpec {
+            github("Test-Account666", "PlugManX", "2.4.1","PlugManX-2.4.1.jar")
+        }
         downloadPlugins {
             downloadPlugins.from(plugins)
         }
