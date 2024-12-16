@@ -40,3 +40,4 @@ data class DownloadData(
 ) //  { "autoUpdate": true,
 //      "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
 
+//TODO: 内部について気にしなくていいようにする pluginごとにsealed classを作成することで処理、

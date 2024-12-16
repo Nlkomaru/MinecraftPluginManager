@@ -15,4 +15,10 @@ import org.incendo.cloud.annotations.Permission
 
 @Command("mpm")
 @Permission("mpm.command")
-class ListCommand
+class ListCommand{
+
+    @Command("list")
+    fun list(){
+
+    }
+}

@@ -24,11 +24,10 @@ object DataClassReplacer {
         fields.forEach { field ->
             val name = if (prefix.isEmpty()) field.name else "$prefix.${field.name}"
             val value = (dataClass::class.members.find { it.name == field.name } as KProperty1<Any, *>).get(dataClass)
-            if (isDataClass(value)) {
-                replaced = replaceFields(replaced, value!!, name)
+            replaced = if (isDataClass(value)) {
+                replaceFields(replaced, value!!, name)
             } else {
-                println("<${name}>は${value}に置換されます")
-                replaced = replaced.replace("<${name}>", value.toString())
+                replaced.replace("<${name}>", value.toString())
             }
         }
         return replaced

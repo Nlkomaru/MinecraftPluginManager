@@ -77,7 +77,7 @@ tasks {
         options.encoding = "UTF-8"
     }
     runServer {
-        minecraftVersion("1.21")
+        minecraftVersion("1.21.3")
         val plugins = runPaper.downloadPluginsSpec {}
         downloadPlugins {
             downloadPlugins.from(plugins)

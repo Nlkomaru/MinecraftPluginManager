@@ -49,7 +49,7 @@ class InfoCommand: KoinComponent {
     }
 
     @Command("jarinfo <file>")
-    fun jarInfo(sender: CommandSender,@Argument("file") file: File) {
+    fun jarInfo(sender: CommandSender, @Argument("file") file: File) {
         println(file)
         val data = PluginDataUtils.getPluginData(file)
         val message: String = pluginToMessage(data)
