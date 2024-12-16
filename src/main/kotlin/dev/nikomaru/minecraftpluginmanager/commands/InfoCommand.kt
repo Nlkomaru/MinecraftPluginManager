@@ -20,14 +20,15 @@ import org.incendo.cloud.annotations.Permission
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import java.io.ObjectInput
 
 @Command("mpm")
 @Permission("mpm.command")
-class InfoCommand: KoinComponent {
+class InfoCommand : KoinComponent {
     private val plugin: MinecraftPluginManager by inject()
 
     @Command("info <plugin>")
-    fun info(actor: CommandSender,@Argument("plugin") pluginName: PluginName) {
+    fun info(sender: CommandSender, @Argument("plugin") pluginName: PluginName) {
         val name = pluginName.name
         val folder = plugin.dataFolder.parentFile
         val pluginFile = folder.listFiles()?.filter { it.name.endsWith(".jar") }?.find {
@@ -35,9 +36,11 @@ class InfoCommand: KoinComponent {
                 is PluginData.BukkitPluginData -> {
                     data.name == name
                 }
+
                 is PluginData.PaperPluginData -> {
                     data.name == name
                 }
+
                 else -> {
                     false
                 }
@@ -45,7 +48,8 @@ class InfoCommand: KoinComponent {
         }
         val pluginData = pluginFile?.let { PluginDataUtils.getPluginData(it) }
         val message: String = pluginToMessage(pluginData)
-        actor.sendRichMessage(message)
+        val divider = "-".repeat(10)
+        sender.sendRichMessage("$divider\n$message\n$divider")
     }
 
     @Command("jarinfo <file>")
@@ -53,39 +57,44 @@ class InfoCommand: KoinComponent {
         println(file)
         val data = PluginDataUtils.getPluginData(file)
         val message: String = pluginToMessage(data)
-        sender.sendRichMessage(message)
+        val divider = "-".repeat(10)
+        sender.sendRichMessage("$divider\n$message\n$divider")
     }
 
 
     private fun pluginToMessage(data: PluginData?) = when (data) {
         is PluginData.BukkitPluginData -> {
             """
-            プラグイン名: ${data.name}
-            バージョン: ${data.version}
-            メインクラス: ${data.main}
-            説明: ${data.description}
-            作者: ${data.author}
-            ウェブサイト: ${data.website}
-            APIバージョン: ${data.apiVersion}
-            """.trimIndent()
+        ${addColor("プラグイン名", data.name)}
+        ${addColor("バージョン", data.version)}
+        ${addColor("メインクラス", data.main)}
+        ${addColor("説明", data.description)}
+        ${addColor("作者", data.author)}
+        ${addColor("ウェブサイト", data.website)}
+        ${addColor("APIバージョン", data.apiVersion)}
+        """.trimIndent()
         }
 
         is PluginData.PaperPluginData -> {
             """
-            プラグイン名: ${data.name}
-            バージョン: ${data.version}
-            メインクラス: ${data.main}
-            説明: ${data.description}
-            APIバージョン: ${data.apiVersion}
-            ブートストラッパー: ${data.bootstrapper}
-            ローダー: ${data.loader}
-            作者: ${data.author}
-            ウェブサイト: ${data.website}
-            """.trimIndent()
+        ${addColor("プラグイン名", data.name)}
+        ${addColor("バージョン", data.version)}
+        ${addColor("メインクラス", data.main)}
+        ${addColor("説明", data.description)}
+        ${addColor("APIバージョン", data.apiVersion)}
+        ${addColor("ブートストラッパー", data.bootstrapper)}
+        ${addColor("ローダー", data.loader)}
+        ${addColor("作者", data.author)}
+        ${addColor("ウェブサイト", data.website)}
+        """.trimIndent()
         }
 
         else -> {
             "プラグインの情報を取得できませんでした。"
         }
+    }
+
+    fun addColor(tag: String, message: Any): String {
+        return "<yellow>$tag<reset>: ${message.toString().replace("\n","")}"
     }
 }

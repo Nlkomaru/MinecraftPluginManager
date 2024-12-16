@@ -7,11 +7,11 @@
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-package dev.nikomaru.minecraftpluginmanager.value
+package dev.nikomaru.minecraftpluginmanager.utils.plugin.loader;
 
+import org.bukkit.plugin.Plugin;
 
-class PluginName(val name: String){
-    override fun toString(): String {
-        return name
-    }
+public interface PluginUnloader {
+
+    void unloadPlugin(Plugin plugin);
 }
