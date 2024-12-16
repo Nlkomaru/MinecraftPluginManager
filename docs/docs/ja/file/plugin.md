@@ -2,7 +2,6 @@
 
 ## Modrinth
 
-## Spigot
 
 ## Hangar
 

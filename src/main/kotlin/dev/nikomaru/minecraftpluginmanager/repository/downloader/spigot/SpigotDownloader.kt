@@ -21,20 +21,6 @@ import org.koin.core.component.KoinComponent
 import java.io.File
 
 class SpigotDownloader: AbstractDownloader(), KoinComponent {
-    override suspend fun download(
-        data: UrlData, number: Int?
-    ) { //https://api.spiget.org/v2/resources/${id}/versions/${getLatestVersion}/download
-        data as UrlData.SpigotmcUrlData
-        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/${getLatestVersion(data)}/download"
-        val details = getDetails(data)
-        val file = File("${getDetails(data).name}-${getLatestVersion(data)}.jar")
-        val versionData = VersionData(getLatestVersion(data), getLatestVersion(data))
-        val repoId = "https://www.spigotmc.org/${details.file.url.split("/").subList(0, 2).joinToString("/")}"
-        val downloadData = DownloadData(
-            true, "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.editedLatestVersion>/download"
-        )
-        DownloaderUtils.download(url, file, ManageData(details.name, versionData, repoId, downloadData))
-    }
 
     private suspend fun getDetails(data: UrlData): SpigotDataDetails {
         data as UrlData.SpigotmcUrlData
@@ -44,11 +30,24 @@ class SpigotDownloader: AbstractDownloader(), KoinComponent {
 
     }
 
-    override suspend fun getLatestVersion(data: UrlData): String {
+    override suspend fun getVersions(data: UrlData): List<String> {
         data as UrlData.SpigotmcUrlData
         val client = DownloaderUtils.client
-        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/latest"
-        val response = client.get(url).body<SpigotBodyData>()
-        return response.id.toString()
+        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions"
+        val response = client.get(url).body<List<SpigotBodyData>>()
+        return response.map { it.id.toString() }
+    }
+
+    override suspend fun downloadByVersion(data: UrlData, version: String, number: Int?) {
+        data as UrlData.SpigotmcUrlData
+        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/${version}/download"
+        val details = getDetails(data)
+        val file = File("${getDetails(data).name}-${version}.jar")
+        val versionData = VersionData(version,getLatestVersion(data))
+        val repoId = "https://www.spigotmc.org/${details.file.url.split("/").subList(0, 2).joinToString("/")}"
+        val downloadData = DownloadData(
+            true, "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.editedLatestVersion>/download"
+        )
+        DownloaderUtils.download(url, file, ManageData(details.name, versionData, repoId, downloadData))
     }
 }

@@ -1,53 +1,72 @@
 # コマンド
 
-`mpm install <url>`
-urlからプラグインをインストールします。
-github, spigot, dev.bukkit, hanger, modrinthに対応しています。
+- [ ] インストール系コマンド
+    - [x] `mpm install <url>`<br>
+      urlからプラグインをインストールします。<br>
+      github, jenkins, dev.bukkit, hanger, modrinth, oreに対応しています。
 
-`mpm uninstall <plugin>`
-プラグインをアンインストールします。
+    - [ ] `mpm uninstall <plugin>`<br>
+      プラグインをアンインストールします。<br>
 
-`mpm list [--lock]`
-インストールされているプラグインの一覧を表示します。
-`--lock`をつけるとロックされているプラグインの一覧を表示します。
+- [ ] 更新系コマンド
+    - [ ] `mpm outdated <plugin>`<br>
+      プラグインの更新を確認します。<br>
 
-`mpm outdated <plugin>`
-プラグインの更新を確認します。
+    - [ ] `mpm outdatedAll`<br>
+      インストールされているプラグインの更新を確認します。<br>
 
-`mpm outdatedAll`
-インストールされているプラグインの更新を確認します。
+    - [ ] `mpm update`<br>
+      /mpm outdated によって新しいバージョンがあるとされたプラグインを更新します。<br>
 
-`mpm update`
-/mpm outdated によって新しいバージョンがあるとされたプラグインを更新します。
+- [x] 情報表示系コマンド
+    - [x] `mpm info <plugin>`<br>
+      プラグインの情報を表示します。<br>
 
-`mpm help`
-ヘルプを表示します。
+    - [x] `mpm jarinfo <file>`<br>
+      jarファイルからプラグインの情報を表示します。<br>
 
-`mpm version`
-バージョンを表示します。
+- [ ] ロード用コマンド
+    - [ ] `mpm load <plugin>`<br>
+      プラグインをロードします。<br>
 
-`mpm reload`
-コンフィグをリロードします。
+    - [ ] `mpm unload <plugin>`<br>
+      プラグインをアンロードします。<br>
 
-`mpm info <plugin>`
-プラグインの情報を表示します。
+    - [ ] `mpm reload <plugin>`<br>
+      プラグインをリロードします。<br>
 
-`mpm search <plugin>`
-プラグインを検索します。
+- [ ] 当プラグイン用コマンド
+    - [ ] `mpm self help`<br>
+      ヘルプを表示します。<br>
+    - [x] `mpm self version`<br>
+      バージョンを表示します。<br>
+    - [ ] `mpm self reload`<br>
+      コンフィグをリロードします。<br>
 
-`mpm lock <plugin>`
-プラグインをロックします。
-ロックをしたプラグインは、`mpm outdatedAll`で更新されません。
+- [ ] ロック用コマンド
 
-`mpm unlock <plugin>`
-プラグインのロックを解除します。
+    - [ ] `mpm lock <plugin>`<br>
+      プラグインをロックします。<br>
+      ロックをしたプラグインは、`mpm outdatedAll`で更新されません。<br>
 
-`mpm removeUnmanaged [--force]`
-mpm管理下にないプラグインを削除します。
-`--force`をつけると確認なしで削除します。
+    - [ ] `mpm unlock <plugin>`<br>
+      プラグインのロックを解除します。<br>
 
+
+- [ ] その他
+    - [ ] `mpm list [--lock]`<br>
+      インストールされているプラグインの一覧を表示します。<br>
+      `--lock`をつけるとロックされているプラグインの一覧を表示します。
+
+    - [ ] `mpm search <plugin>`<br>
+      プラグインを検索します。<br>
+
+    - [ ] `mpm removeUnmanaged [--force]`<br>
+      mpm管理下にないプラグインを削除します。<br>
+      `--force`をつけると確認なしで削除します。
 
 ## Usage
+
 まず初めに、`mpm install <url>`でプラグインをインストールします。<br>
 
 インストールされたプラグインは`mpm list`で確認できます。<br>
@@ -60,6 +79,6 @@ mpm管理下にないプラグインを削除します。
 インストールされたプラグインをアンインストールするには`mpm uninstall <plugin>`を使用します。<br>
 
 !!! warning
-    mpm管理下にないプラグインは削除されるため、/plugins/minecraftPluginManager/local にプラグインを移動してください。
-    この場合、`mpm updateAll`を実行時にプラグインがコピーされます。
+mpm管理下にないプラグインは削除されるため、/plugins/minecraftPluginManager/local にプラグインを移動してください。
+この場合、`mpm updateAll`を実行時にプラグインがコピーされます。
 

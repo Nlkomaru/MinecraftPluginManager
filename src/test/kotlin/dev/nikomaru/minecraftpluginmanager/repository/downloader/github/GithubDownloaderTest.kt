@@ -46,8 +46,34 @@ class GithubDownloaderTest : KoinTest {
             val manager = DownloadManager()
             urls.forEach {
                 val urlData = manager.getURLData(it) as UrlData.GithubUrlData
-                val data = downloader.getData(urlData)
+                val data = downloader.getData(urlData,downloader.getLatestVersion(urlData))
                 println(data.tagName)
+            }
+        }
+    }
+
+    @Test
+    fun getVersions() {
+        runTest {
+            val downloader = GithubDownloader()
+            val manager = DownloadManager()
+            urls.forEach {
+                val urlData = manager.getURLData(it) as UrlData.GithubUrlData
+                val versions = downloader.getVersions(urlData)
+                println(versions)
+            }
+        }
+    }
+
+    @Test
+    fun getDownloadByVersions() {
+        runTest {
+            val downloader = GithubDownloader()
+            val manager = DownloadManager()
+            urls.forEach {
+                val urlData = manager.getURLData(it) as UrlData.GithubUrlData
+                val versions = downloader.getVersions(urlData)
+                downloader.downloadByVersion(urlData, versions.first(), 0)
             }
         }
     }

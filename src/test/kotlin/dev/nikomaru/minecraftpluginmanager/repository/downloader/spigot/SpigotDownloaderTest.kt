@@ -12,12 +12,10 @@ package dev.nikomaru.minecraftpluginmanager.repository.downloader.spigot
 import dev.nikomaru.minecraftpluginmanager.MinecraftPluginManagerTest
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.DownloadManager
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.UrlData
-import dev.nikomaru.minecraftpluginmanager.repository.downloader.github.GithubDownloader
 import kotlinx.coroutines.test.runTest
-import org.koin.test.KoinTest
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.koin.test.KoinTest
 
 @ExtendWith(MinecraftPluginManagerTest::class)
 class SpigotDownloaderTest: KoinTest{
@@ -25,17 +23,18 @@ class SpigotDownloaderTest: KoinTest{
         "https://www.spigotmc.org/resources/placeholderapi.6245/",
         "https://www.spigotmc.org/resources/vault.34315/"
     )
-//    @Test
-//    fun download() {
-//        runTest {
-//            val downloader = SpigotDownloader()
-//            val manager = DownloadManager()
-//            urls.forEach {
-//                val urlData = manager.getURLData(it) as UrlData.SpigotmcUrlData
-//                downloader.download(urlData, 0)
-//            }
-//        }
-//    }
+
+    @Test
+    fun download() {
+        runTest {
+            val downloader = SpigotDownloader()
+            val manager = DownloadManager()
+            urls.forEach {
+                val urlData = manager.getURLData(it) as UrlData.SpigotmcUrlData
+                downloader.download(urlData, 0)
+            }
+        }
+    }
 
     @Test
     fun getLatestVersion() {

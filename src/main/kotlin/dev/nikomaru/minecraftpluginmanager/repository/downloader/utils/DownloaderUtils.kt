@@ -36,7 +36,7 @@ object DownloaderUtils: KoinComponent {
     }
 
     fun download(url: String, file: File, manageData: ManageData) {
-        FileUtils.copyURLToFile(URL(url), file)
+        FileUtils.copyURLToFile(URL(url), file, 10 * 1000, 30 * 1000)
         val pluginData = PluginDataUtils.getPluginData(file)
         val identity: String
         when (pluginData) {

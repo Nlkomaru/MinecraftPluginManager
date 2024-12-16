@@ -37,6 +37,7 @@ data class VersionData(
 data class DownloadData(
     val autoUpdate: Boolean,
     val downloadUrl: String,
-) //  { //    "autoUpdate": true, //    "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
-//  }
+) //  { "autoUpdate": true,
+//      "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
 
+//TODO: 内部について気にしなくていいようにする pluginごとにsealed classを作成することで処理、

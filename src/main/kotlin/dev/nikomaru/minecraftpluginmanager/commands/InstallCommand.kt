@@ -37,5 +37,5 @@ class InstallCommand: KoinComponent {
             repositoryUrl
         }.let { DownloadManager().download(it, number) }
     }
-
+    
 }
