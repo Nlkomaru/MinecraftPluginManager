@@ -11,6 +11,7 @@ package dev.nikomaru.minecraftpluginmanager.repository.downloader.spigot
 
 import dev.nikomaru.minecraftpluginmanager.data.DownloadData
 import dev.nikomaru.minecraftpluginmanager.data.ManageData
+import dev.nikomaru.minecraftpluginmanager.data.RepositoryData
 import dev.nikomaru.minecraftpluginmanager.data.VersionData
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.UrlData
 import dev.nikomaru.minecraftpluginmanager.repository.downloader.abstract.AbstractDownloader
@@ -21,34 +22,53 @@ import org.koin.core.component.KoinComponent
 import java.io.File
 
 class SpigotDownloader: AbstractDownloader(), KoinComponent {
-    override suspend fun download(
-        data: UrlData, number: Int?
-    ) { //https://api.spiget.org/v2/resources/${id}/versions/${getLatestVersion}/download
-        data as UrlData.SpigotmcUrlData
-        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/${getLatestVersion(data)}/download"
-        val details = getDetails(data)
-        val file = File("${getDetails(data).name}-${getLatestVersion(data)}.jar")
-        val versionData = VersionData(getLatestVersion(data), getLatestVersion(data))
-        val repoId = "https://www.spigotmc.org/${details.file.url.split("/").subList(0, 2).joinToString("/")}"
-        val downloadData = DownloadData(
-            true, "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.editedLatestVersion>/download"
-        )
-        DownloaderUtils.download(url, file, ManageData(details.name, versionData, repoId, downloadData))
-    }
 
     private suspend fun getDetails(data: UrlData): SpigotDataDetails {
         data as UrlData.SpigotmcUrlData
         val client = DownloaderUtils.client
         val url = "https://api.spiget.org/v2/resources/${data.resId}"
         return client.get(url).body<SpigotDataDetails>()
-
     }
 
-    override suspend fun getLatestVersion(data: UrlData): String {
+    override suspend fun getVersions(data: UrlData): List<String> {
         data as UrlData.SpigotmcUrlData
         val client = DownloaderUtils.client
-        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/latest"
-        val response = client.get(url).body<SpigotBodyData>()
-        return response.id.toString()
+        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions"
+        val response = client.get(url).body<List<SpigotBodyData>>()
+        return response.map { it.id.toString() }
+    }
+
+    override suspend fun downloadByVersion(data: UrlData, version: String, number: Int?) {
+        data as UrlData.SpigotmcUrlData
+        val url = "https://api.spiget.org/v2/resources/${data.resId}/versions/${version}/download"
+        val details = getDetails(data)
+        val file = File("${getDetails(data).name}-${version}.jar")
+        
+        val repositoryData = RepositoryData.SpigotData(
+            resId = data.resId
+        )
+        
+        val versionData = VersionData(
+            rawCurrentVersion = version,
+            rawLatestVersion = getLatestVersion(data),
+            editRegex = "(.*)",
+            editedCurrentVersion = version,
+            editedLatestVersion = getLatestVersion(data)
+        )
+        
+        val downloadUrl = "https://api.spiget.org/v2/resources/${data.resId}/versions/<version.rawLatestVersion>/download"
+        val downloadData = DownloadData(
+            autoUpdate = true, 
+            downloadUrl = downloadUrl
+        )
+        
+        val manageData = ManageData(
+            identify = details.name,
+            repositories = repositoryData,
+            version = versionData,
+            download = downloadData
+        )
+        
+        DownloaderUtils.download(url, file, manageData)
     }
 }

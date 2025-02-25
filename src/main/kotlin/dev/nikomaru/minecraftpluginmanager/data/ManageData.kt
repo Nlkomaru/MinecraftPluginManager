@@ -11,32 +11,90 @@ package dev.nikomaru.minecraftpluginmanager.data
 
 import kotlinx.serialization.Serializable
 
+/**
+ * プラグインの管理情報を表すデータクラス
+ * @param identify プラグインの識別子
+ * @param repositories リポジトリ情報
+ * @param version バージョン情報
+ * @param download ダウンロード設定
+ */
 @Serializable
 data class ManageData(
     val identify: String,
+    val repositories: RepositoryData,
     val version: VersionData,
-    val repoId: String,
     val download: DownloadData,
-) //  {
+)
 
-//    "identify": "MinecraftPluginManager",
-//    "repoId": "https://github.com/Nlkomaru/MinecraftPluginManager/",
-//    "version": VersionData,
-//    "download": DownloadData
-//  }
+/**
+ * リポジトリ情報を表す封印クラス
+ */
+@Serializable
+sealed class RepositoryData {
+    /**
+     * Modrinthリポジトリの情報
+     * @param id Modrinthプロジェクトのid
+     */
+    @Serializable
+    data class ModrinthData(val id: String) : RepositoryData()
+
+    /**
+     * Spigotリポジトリの情報
+     * @param resId Spigotリソースのid
+     */
+    @Serializable
+    data class SpigotData(val resId: String) : RepositoryData()
+
+    /**
+     * Hangarリポジトリの情報
+     * @param owner プロジェクトのオーナー名
+     * @param projectName プロジェクト名
+     */
+    @Serializable
+    data class HangarData(val owner: String, val projectName: String) : RepositoryData()
+
+    /**
+     * Githubリポジトリの情報
+     * @param owner リポジトリのオーナー名
+     * @param repository リポジトリ名
+     */
+    @Serializable
+    data class GithubData(val owner: String, val repository: String) : RepositoryData()
+
+    /**
+     * Jenkinsリポジトリの情報
+     * @param url JenkinsサーバーのベースURL
+     * @param job ジョブ名
+     * @param artifact アーティファクトのパス
+     */
+    @Serializable
+    data class JenkinsData(val url: String, val job: String, val artifact: String) : RepositoryData()
+}
+
+/**
+ * バージョン情報を表すデータクラス
+ * @param rawCurrentVersion 生のバージョン文字列（例：v1.0.0）
+ * @param rawLatestVersion 生の最新バージョン文字列（例：v1.0.0）
+ * @param editRegex バージョン編集用の正規表現（例：v(.*)）
+ * @param editedCurrentVersion 編集後の現在バージョン（例：1.0.0）
+ * @param editedLatestVersion 編集後の最新バージョン（例：1.0.0）
+ */
 @Serializable
 data class VersionData(
-    val editedCurrentVersion: String, val editedLatestVersion: String
-) //  {
+    val rawCurrentVersion: String = "",
+    val rawLatestVersion: String = "",
+    val editRegex: String = "",
+    val editedCurrentVersion: String,
+    val editedLatestVersion: String
+)
 
-//    "editedCurrentVersion": "1.0.0",
-//    "editedLatestVersion": "1.0.0"
-//  }
-// urlの後ろには、/をつけない システムで弾く
+/**
+ * ダウンロード設定を表すデータクラス
+ * @param autoUpdate 自動更新の有効/無効
+ * @param downloadUrl ダウンロードURL（バージョン置換用の特殊構文を含む）
+ */
 @Serializable
 data class DownloadData(
     val autoUpdate: Boolean,
     val downloadUrl: String,
-) //  { //    "autoUpdate": true, //    "downloadUrl": "<url>/releases/download/v<latestVersion>/MinecraftPluginManager_v<latestVersion>.jar"
-//  }
-
+)

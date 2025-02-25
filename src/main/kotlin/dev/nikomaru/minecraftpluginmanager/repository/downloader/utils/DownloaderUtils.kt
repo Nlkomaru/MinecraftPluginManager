@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import java.io.File
+import java.net.URI
 import java.net.URL
 
 
@@ -36,7 +37,7 @@ object DownloaderUtils: KoinComponent {
     }
 
     fun download(url: String, file: File, manageData: ManageData) {
-        FileUtils.copyURLToFile(URL(url), file)
+        FileUtils.copyURLToFile(URI(url).toURL(), file, 10 * 1000, 30 * 1000)
         val pluginData = PluginDataUtils.getPluginData(file)
         val identity: String
         when (pluginData) {
