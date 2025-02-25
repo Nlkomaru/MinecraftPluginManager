@@ -1,0 +1,114 @@
+# フォーマット
+
+## フォーマットの概要
+当プラグインでは、modrinth, spigot, hangar, github, jenkins, ローカルからのプラグインのインストールをサポートしています。
+そこで、それぞれについて管理するためのフォーマットをいかに示します。
+
+## フォーマットについて
+
+### 基本構造
+プラグインの管理情報は以下の基本構造で保存されます：
+
+```yaml
+プラグイン名:
+    repositories:
+        リポジトリタイプ:
+            # リポジトリ固有の情報
+    version:
+        rawCurrentVersion: 生のバージョン文字列（例：v1.0.0）
+        rawLatestVersion: 生の最新バージョン文字列（例：v1.0.0）
+        editRegex: バージョン編集用の正規表現（例：v(.*)）
+        editedCurrentVersion: 編集後の現在バージョン（例：1.0.0）
+        editedLatestVersion: 編集後の最新バージョン（例：1.0.0）
+    download:
+        autoUpdate: 自動更新の有効/無効（true/false）
+        downloadUrl: ダウンロードURL（バージョン置換用の特殊構文を含む）
+```
+
+### ダウンロード設定の例
+
+```yaml
+plasmo-voice:
+    repositories:
+        modrinth:
+            id: plasmo-voice
+    version:
+        rawCurrentVersion: v1.0.0
+        rawLatestVersion: v1.0.0
+        editRegex: v(.*)
+        editedCurrentVersion: 1.0.0
+        editedLatestVersion: 1.0.0
+    download:
+        autoUpdate: true
+        downloadUrl: https://github.com/Nlkomaru/MinecraftPluginManager/releases/download/<version.editedLatestVersion>/plasmo-voice.jar
+```
+
+### modrinth
+```yaml
+repositories:
+    modrinth:
+        id: プラグインのmodrinthID（例：plasmo-voice）
+```
+
+### spigot
+```yaml
+repositories:
+    spigot:
+        resId: プラグインのリソースID（例：32536）
+```
+
+### hangar
+```yaml
+repositories:
+    hangar:
+        owner: プロジェクトのオーナー名（例：AuroraLS3）
+        projectName: プロジェクト名（例：Plan-Player-Analytics）
+```
+
+### github
+```yaml
+repositories:
+    github:
+        owner: リポジトリのオーナー名（例：Nlkomaru）
+        repository: リポジトリ名（例：MinecraftPluginManager）
+```
+
+### jenkins
+```yaml
+repositories:
+    jenkins:
+        url: JenkinsサーバーのベースURL
+        job: ジョブ名
+        artifact: アーティファクトのパス
+```
+
+## バージョン管理
+プラグインのバージョン管理には以下の情報が使用されます：
+
+```yaml
+version:
+    rawCurrentVersion: 生のバージョン文字列（例：v1.0.0）
+    rawLatestVersion: 生の最新バージョン文字列（例：v1.0.0）
+    editRegex: バージョン編集用の正規表現（例：v(.*)）
+    editedCurrentVersion: 編集後の現在バージョン（例：1.0.0）
+    editedLatestVersion: 編集後の最新バージョン（例：1.0.0）
+```
+
+正規表現（editRegex）を使用して、生のバージョン文字列から必要な部分を抽出し、編集後のバージョンとして使用します。例えば、`v1.0.0`から`1.0.0`を抽出するには、`v(.*)`という正規表現を使用します。
+
+## ダウンロード設定
+ダウンロード設定には以下の情報が含まれます：
+
+```yaml
+download:
+    autoUpdate: 自動更新の有効/無効（true/false）
+    downloadUrl: ダウンロードURL（バージョン置換用の特殊構文を含む）
+```
+
+ダウンロードURLでは、以下の特殊構文が使用できます：
+- `<repoId>`: リポジトリのベースURLに置換されます
+- `<version.rawLatestVersion>`: 生の最新バージョン文字列に置換されます
+- `<version.editedLatestVersion>`: 編集後の最新バージョンに置換されます
+
+
+
