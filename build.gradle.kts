@@ -9,19 +9,24 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.run.paper)
     alias(libs.plugins.resource.factory)
+    alias(libs.plugins.dokka)
 }
 group = "dev.nikomaru"
 version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
     maven("https://jitpack.io")
     maven("https://plugins.gradle.org/m2/")
     maven("https://repo.incendo.org/content/repositories/snapshots")
     maven("https://repo.codemc.io/repository/maven-public/")
+}
+
+tasks.dokkaHtml {
+    outputDirectory.set(file("${project.rootDir}/docs/static/dokka"))
 }
 
 
@@ -31,6 +36,7 @@ dependencies {
     implementation(libs.bundles.commands)
 
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kaml)
 
     implementation(libs.bundles.coroutines)
 
@@ -45,6 +51,7 @@ dependencies {
 
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.mock.bukkit)
+    testImplementation(libs.mockk)
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.bundles.koin.test)
@@ -78,6 +85,7 @@ tasks {
     }
     runServer {
         minecraftVersion("1.21")
+        
         val plugins = runPaper.downloadPluginsSpec {}
         downloadPlugins{
             downloadPlugins.from(plugins)
@@ -99,7 +107,7 @@ sourceSets.main {
             name = "MinecraftPluginManager"
             version = "miencraft_plugin_version"
             website = "https://github.com/Nlkomaru/MinecraftPluginManager"
-            main = "$group.minecraftpluginmanager.MinecraftPluginManager"
+            main = "$group.mpm.MinecraftPluginManager"
             apiVersion = "1.20"
             libraries = libs.bundles.coroutines.asString()
             softDepend = listOf()

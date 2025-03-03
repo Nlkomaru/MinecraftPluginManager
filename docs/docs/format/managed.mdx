@@ -1,0 +1,148 @@
+# 管理プラグイン(Managed plugin)の情報の管理に関して
+
+## フォーマットの概要
+当プラグインでは、modrinth, spigot, hangar, github, jenkins, ローカルからのプラグインのインストールをサポートしています。
+そこで、それぞれについて管理するためのフォーマットをいかに示します。
+
+形式としては、yaml形式をサポートし一つのファイルで一つのプラグインを保存します。
+保存場所としては、plugins/mpm/metadata/に保存します
+
+### 基本構造
+プラグインの管理情報は以下の基本構造で保存されます
+
+```yaml title="plugins/mpm/metadata/<plugin-name>.yml"
+プラグイン名:
+    repository:
+        リポジトリタイプ:
+            # リポジトリ固有の情報
+    version:
+        edit_regex: 
+            version: バージョン編集用の正規表現 (例:v(.*)|(.*))
+            id: バージョン編集用の正規表現 (例:v(.*)|(.*))
+        current: 
+            raw: 生のバージョン文字列 (例:v1.0.0)
+            edited: 編集後のバージョン文字列 (例:1.0.0)
+            raw_download_id: ダウンロード用のID (例:102|uuid|v1.0.0)
+            edited_download_id: 編集後のダウンロード用のID (例:102|uuid|1.0.0)
+        latest: 
+            raw: 生のバージョン文字列 (例:v2.0.0)
+            edited: 編集後のバージョン文字列 (例:2.0.0)
+            raw_download_id: ダウンロード用のID (例:103|uuid|v2.0.0)
+            edited_download_id: 編集後のダウンロード用のID (例:103|uuid|2.0.0)
+    download:
+        lock: ロックの有効/無効 (true/false) ロックされているプラグインは更新されません。autoUpdateよりも優先されます。
+        auto_update: 自動更新の有効/無効 (true/false)
+        download_url: ダウンロードURL (バージョン置換用の特殊構文を含む)
+        file_name: ダウンロードするファイル名 (バージョン置換用の特殊構文を含む)
+```
+
+### ダウンロード設定の例
+
+```yaml
+plasmo-voice:
+    repository:
+        modrinth:
+            id: plasmo-voice
+    version:
+        edit_regex:
+            version: v(.*) // プラグインのバージョンを表す正規表現
+            id: (.*) // プラグインのIDを表す正規表現
+        current:
+            raw_version: v1.0.0
+            edited_version: 1.0.0
+            raw_download_id: 1.0.0
+            edited_download_id: 1.0.0
+        latest:
+            raw_version: v2.0.0
+            edited_version: 2.0.0
+            raw_download_id: 2.0.0
+            edited_download_id: 2.0.0
+    download:
+        lock: false
+        auto_update: true
+        download_url: https://modrinth.com/plugin/plasmo-voice/version/<version.latest.download_id>/download
+        file_name: plasmo-voice-<version.latest.edited_version>.jar
+```
+
+### modrinth
+```yaml
+repository:
+    modrinth:
+        id: プラグインのmodrinthID(例:plasmo-voice)
+```
+
+### spigot
+```yaml
+repository:
+    spigot:
+        resId: プラグインのリソースID(例:32536)
+```
+
+### hangar
+```yaml
+repository:
+    hangar:
+        owner: プロジェクトのオーナー名(例:AuroraLS3)
+        project_name: プロジェクト名(例:Plan-Player-Analytics)
+```
+
+### github
+```yaml
+repository:
+    github:
+        owner: リポジトリのオーナー名(例:Nlkomaru)
+        repository: リポジトリ名(例:MinecraftPluginManager)
+```
+
+### jenkins
+```yaml
+repository:
+    jenkins:
+        url: JenkinsサーバーのベースURL (例:https://ci.example.com)
+        job: ジョブ名(例:plasmo-voice)
+        artifact: アーティファクトのパス(例:build/libs/*.jar)
+```
+
+## バージョン管理
+プラグインのバージョン管理には以下の情報が使用されます:
+
+```yaml
+version:
+    edit_regex:
+        version: バージョン編集用の正規表現(例:v(.*))
+        id: バージョン編集用の正規表現 (例: (.*))
+    current:
+        raw_version: 生のバージョン文字列(例:v1.0.0)
+        edited_version: 編集後のバージョン文字列(例:1.0.0)
+        raw_download_id: ダウンロード用のID(例:102|uuid|v1.0.0)
+        edited_download_id: 編集後のダウンロード用のID(例:102|uuid|1.0.0)
+    latest:
+        raw_version: 生のバージョン文字列(例:v2.0.0)
+        edited_version: 編集後のバージョン文字列(例:2.0.0)
+        raw_download_id: ダウンロード用のID(例:103|uuid|v2.0.0)
+        edited_download_id: 編集後のダウンロード用のID(例:103|uuid|2.0.0)        
+```
+
+正規表現(edit_regex)を使用して、生のバージョン文字列から必要な部分を抽出し、編集後のバージョンとして使用します。例えば、`v1.0.0`から`1.0.0`を抽出するには、`v(.*)`という正規表現を使用します。
+
+## ダウンロード設定
+ダウンロード設定には以下の情報が含まれます:
+
+```yaml
+download:
+    lock: ロックの有効/無効(true/false) ロックされているプラグインは更新されません。auto_updateよりも優先されます。
+    auto_update: 自動更新の有効/無効(true/false)
+    download_url: ダウンロードURL(バージョン置換用の特殊構文を含む)
+    file_name: ダウンロードするファイル名(バージョン置換用の特殊構文を含む)
+```
+
+ダウンロードURLでは、以下の特殊構文が使用できます:
+- `<repoType.*>`: リポジトリのIDに置換されます
+- `<version.latest.raw_version>`: 生の最新バージョン文字列に置換されます
+- `<version.latest.edited_version>`: 編集後の最新バージョンに置換されます
+- `<version.latest.raw_download_id>`: 生のダウンロード用のIDに置換されます
+- `<version.latest.edited_download_id>`: 編集後のダウンロード用のIDに置換されます
+- `<version.current.raw_version>`: 生の現在バージョン文字列に置換されます //あまり、使用しない
+- `<version.current.edited_version>`: 編集後の現在バージョンに置換されます //あまり、使用しない
+- `<version.current.raw_download_id>`: 生のダウンロード用のIDに置換されます //あまり、使用しない
+- `<version.current.edited_download_id>`: 編集後のダウンロード用のIDに置換されます //あまり、使用しない
