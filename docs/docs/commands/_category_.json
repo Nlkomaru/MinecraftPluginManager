@@ -1,0 +1,9 @@
+{
+    "label": "コマンド",
+    "position": 2,
+    "link": {
+        "type": "generated-index",
+        "title": "コマンド",
+        "description": "コマンドを実行する方法を紹介します。"
+    }
+}

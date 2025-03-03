@@ -1,22 +1,25 @@
-import { CircleCheckBig } from 'lucide-react';
-import { Check } from 'lucide-react';
-import { CircleAlert } from 'lucide-react';
-import { HandHelping } from 'lucide-react';
-import React from 'react';
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@site/src/components/ui/hover-card";
+import { CircleCheckBig } from "lucide-react";
+import { Check } from "lucide-react";
+import { CircleAlert } from "lucide-react";
+import { HandHelping } from "lucide-react";
+import type React from "react";
 
 // バッジのプロパティを定義
 interface CommandLineProps {
-    status: 'stable' | 'newly' | 'beta' | 'proposal';
+    status: "stable" | "newly" | "beta" | "proposal";
     command: string;
 }
 
 // バッジコンポーネントを作成
-export const CommandLine: React.FC<CommandLineProps> = ({ status, command }) => {
+export const CommandLine: React.FC<CommandLineProps> = ({
+    status,
+    command,
+}) => {
     // 状態に応じたスタイルを設定
     // スタイルを適用するための関数を定義
     // Tailwind CSSを使用してスタイルを定義
@@ -25,10 +28,10 @@ export const CommandLine: React.FC<CommandLineProps> = ({ status, command }) => 
     // 状態に応じたスタイルを返す
     const getCommandLineStyle = (status: string) => {
         const styles: { [key: string]: string } = {
-            stable: `${commonStyle} bg-green-500`, // 緑色を見やすく
-            newly: `${commonStyle} bg-blue-500`, // 青色を見やすく
-            beta: `${commonStyle} bg-orange-500`, // オレンジ色を見やすく
-            proposal: `${commonStyle} bg-gray-500`, // グレーを見やすく
+            stable: `${commonStyle} bg-green-500/50 dark:bg-green-300/70`, // 緑色を見やすく
+            newly: `${commonStyle} bg-blue-500/50 dark:bg-blue-300/70`, // 青色を見やすく
+            beta: `${commonStyle} bg-orange-500/50 dark:bg-orange-200/70`, // オレンジ色を見やすく
+            proposal: `${commonStyle} bg-gray-500/50 dark:bg-gray-200/70`, // グレーを見やすく
         };
         // スタイルが存在する場合は返し、存在しない場合は空の文字列を返す
         return styles[status] || "";
@@ -47,22 +50,35 @@ export const CommandLine: React.FC<CommandLineProps> = ({ status, command }) => 
     return (
         <HoverCard>
             <HoverCardTrigger className={getCommandLineStyle(status)}>
-                <div className={`flex items-center ${getCommandLineStyle(status)}`}>
+                <div
+                    className={`flex items-center ${getCommandLineStyle(status)}`}
+                >
                     <div className="flex items-center ml-8">
-                        
-                        {status === 'proposal' && <HandHelping className={getBadgeStyle(status)} />} {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
-                        {status === 'beta' && <CircleAlert className={getBadgeStyle(status)} />} {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
-                        {status === 'newly' && <Check className={getBadgeStyle(status)} />} {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
-                        {status === 'stable' && <CircleCheckBig className={getBadgeStyle(status)} />} {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
-                        <span className='text-black'>{command}</span>
+                        {status === "proposal" && (
+                            <HandHelping className={getBadgeStyle(status)} />
+                        )}{" "}
+                        {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
+                        {status === "beta" && (
+                            <CircleAlert className={getBadgeStyle(status)} />
+                        )}{" "}
+                        {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
+                        {status === "newly" && (
+                            <Check className={getBadgeStyle(status)} />
+                        )}{" "}
+                        {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
+                        {status === "stable" && (
+                            <CircleCheckBig className={getBadgeStyle(status)} />
+                        )}{" "}
+                        {/* バッジとコマンドの間隔を広げるためにmr-4に変更 */}
+                        <span className="text-black">{command}</span>
                     </div>
                 </div>
             </HoverCardTrigger>
-            <HoverCardContent className='bg-white'>
-                {status === 'proposal' && <span>提案中のコマンド</span>}
-                {status === 'beta' && <span>ベータ版のコマンド</span>}
-                {status === 'newly' && <span>新しいコマンド</span>}
-                {status === 'stable' && <span>安定版のコマンド</span>}
+            <HoverCardContent className="bg-white">
+                {status === "proposal" && <span>提案中のコマンド</span>}
+                {status === "beta" && <span>ベータ版のコマンド</span>}
+                {status === "newly" && <span>新しいコマンド</span>}
+                {status === "stable" && <span>安定版のコマンド</span>}
             </HoverCardContent>
         </HoverCard>
     );

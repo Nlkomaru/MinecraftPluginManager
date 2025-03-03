@@ -11,7 +11,7 @@ const config: Config = {
     trailingSlash: true,
 
     // Set the production url of your site here
-    url: "https://minecraft-plugin-manager.docs.nikomaru.dev",
+    url: "https://mpm.plugin.nikomaru.dev",
     // Set the /<baseUrl>/ pathname under which your site is served
     // For GitHub pages deployment, it is often '/<projectName>/'
     baseUrl: "/",
@@ -82,6 +82,12 @@ const config: Config = {
                     label: "Download",
                     position: "right",
                 },
+                {
+                    href: "/dokka",
+                    label: "Dokka",
+                    position: "left",
+                    target: "_blank",
+                },
             ],
         },
         footer: {
@@ -126,7 +132,14 @@ const config: Config = {
             copyright: `No right reserved. This docs under CC0. Built with Docusaurus.`,
         },
         prism: {
-            additionalLanguages: ["java", "groovy", "diff", "toml", "yaml", "kotlin"],
+            additionalLanguages: [
+                "java",
+                "groovy",
+                "diff",
+                "toml",
+                "yaml",
+                "kotlin",
+            ],
             theme: prismThemes.github,
             darkTheme: prismThemes.dracula,
         },
