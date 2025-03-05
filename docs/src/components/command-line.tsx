@@ -7,7 +7,6 @@ import { CircleCheckBig } from "lucide-react";
 import { Check } from "lucide-react";
 import { CircleAlert } from "lucide-react";
 import { HandHelping } from "lucide-react";
-import type React from "react";
 
 // バッジのプロパティを定義
 interface CommandLineProps {
@@ -74,7 +73,7 @@ export const CommandLine: React.FC<CommandLineProps> = ({
                     </div>
                 </div>
             </HoverCardTrigger>
-            <HoverCardContent className="bg-white">
+            <HoverCardContent className="bg-white dark:bg-[var(--ifm-background-color)] dark:text-white">
                 {status === "proposal" && <span>提案中のコマンド</span>}
                 {status === "beta" && <span>ベータ版のコマンド</span>}
                 {status === "newly" && <span>新しいコマンド</span>}
