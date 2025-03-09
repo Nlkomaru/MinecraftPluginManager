@@ -25,8 +25,13 @@ repositories {
     maven("https://repo.codemc.io/repository/maven-public/")
 }
 
-tasks.dokkaHtml {
-    outputDirectory.set(file("${project.rootDir}/docs/static/dokka"))
+dokka {
+    pluginsConfiguration.html {
+        footerMessage.set("No right reserved. This docs under CC0 1.0.")
+    }
+    dokkaPublications.html {
+        outputDirectory.set(file("${project.rootDir}/docs/static/dokka"))
+    }
 }
 
 
