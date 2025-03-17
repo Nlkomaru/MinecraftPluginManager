@@ -1,5 +1,5 @@
 /*
- * Written in 2023-2024 by Nikomaru <nikomaru@nikomaru.dev>
+ * Written in 2023-2025 by Nikomaru <nikomaru@nikomaru.dev>
  *
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.This software is distributed without any warranty.
  *
@@ -9,67 +9,59 @@
 
 package dev.nikomaru.mpm.infrastructure.github
 
+import dev.nikomaru.mpm.domain.model.repository.RepositoryType
 import dev.nikomaru.mpm.domain.model.repository.UrlData
 import dev.nikomaru.mpm.domain.model.repository.VersionData
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.plugins.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.*
+import dev.nikomaru.mpm.infrastructure.common.AbstractPluginDownloader
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 import java.time.LocalDateTime
 
 /**
  * GitHubからプラグインをダウンロードするクラス
  */
-class GithubDownloader {
+class GithubDownloader : AbstractPluginDownloader() {
 
-    // HTTP クライアント
-    private val client = HttpClient(CIO) {
-        install(HttpTimeout) {
-            requestTimeoutMillis = 60000
-            connectTimeoutMillis = 60000
-            socketTimeoutMillis = 60000
-        }
+
+    /**
+     * リポジトリタイプの判定
+     * @param url リポジトリURL
+     * @return リポジトリタイプ、該当なしの場合はnull
+     */
+    override fun getRepositoryType(url: String): RepositoryType? {
+        val githubPattern = Regex("https?://(?:www\\.)?github\\.com/([^/]+)/([^/]+)(?:/.*)?")
+        return if (githubPattern.matches(url)) RepositoryType.GITHUB else null
     }
 
-    // JSONパーサー
-    private val json = Json { ignoreUnknownKeys = true }
+    /**
+     * URLデータの抽出
+     * @param url リポジトリURL
+     * @return 抽出したURLデータ
+     */
+    override fun getUrlData(url: String): UrlData? {
+        val githubPattern = Regex("https?://(?:www\\.)?github\\.com/([^/]+)/([^/]+)(?:/.*)?")
+        val match = githubPattern.find(url) ?: return null
+        val owner = match.groupValues[1]
+        val repository = match.groupValues[2]
+        return UrlData.GithubUrlData(owner, repository)
+    }
 
     /**
      * 最新バージョンを取得
      * @param urlData GitHubのURL情報
      * @return 最新バージョン名
      */
-    suspend fun getLatestVersion(urlData: UrlData.GithubUrlData): VersionData {
+    override suspend fun getLatestVersion(urlData: UrlData): VersionData {
+        urlData as UrlData.GithubUrlData
         val url = "https://api.github.com/repos/${urlData.owner}/${urlData.repository}/releases/latest"
-
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = client.get(url) {
-                    headers {
-                        append(HttpHeaders.Accept, "application/vnd.github+json")
-                        append(HttpHeaders.UserAgent, "MinecraftPluginManager")
-                    }
-                }
-
-                if (response.status.isSuccess()) {
-                    val responseJson = json.parseToJsonElement(response.bodyAsText()).jsonObject
-                    val id = responseJson["id"]?.jsonPrimitive?.content ?: "unknown"
-                    val versionName = responseJson["tag_name"]?.jsonPrimitive?.content ?: "unknown"
-                    return@withContext VersionData(downloadId = id, version = versionName)
-                } else {
-                    throw Exception("GitHubからの応答が失敗しました: ${response.status}")
-                }
-            } catch (e: Exception) {
-                throw Exception("最新バージョンの取得に失敗しました: ${e.message}")
-            }
-        }
+        val response = getRequest(url, "application/vnd.github+json")
+        val responseJson = json.parseToJsonElement(response).jsonObject
+        //githubのダウンロードではidを利用しない
+        val id = responseJson["id"]?.jsonPrimitive?.content ?: "unknown"
+        val versionName = responseJson["tag_name"]?.jsonPrimitive?.content ?: "unknown"
+        return VersionData(downloadId = id, version = versionName)
     }
 
     /**
@@ -79,58 +71,37 @@ class GithubDownloader {
      * @param number アセット番号（複数アセットがある場合）
      * @return ダウンロードしたファイル
      */
-    suspend fun downloadByVersion(urlData: UrlData.GithubUrlData, version: VersionData, number: Int?): File? {
-        val url = "https://api.github.com/repos/${urlData.owner}/${urlData.repository}/releases/tags/$version"
+    override suspend fun downloadByVersion(urlData: UrlData, version: VersionData, number: Int?): File? {
+        urlData as UrlData.GithubUrlData
+        val url = "https://api.github.com/repos/${urlData.owner}/${urlData.repository}/releases/${version.downloadId}/assets"
+        val response = getRequest(url, "application/vnd.github+json")
+        val responseJson = json.parseToJsonElement(response).jsonObject
+        val assets = responseJson["assets"]?.jsonArray ?: return null
 
-        return withContext(Dispatchers.IO) {
-            try {
-                // リリース情報を取得
-                val response = client.get(url) {
-                    headers {
-                        append(HttpHeaders.Accept, "application/vnd.github+json")
-                        append(HttpHeaders.UserAgent, "MinecraftPluginManager")
-                    }
-                }
-
-                if (!response.status.isSuccess()) {
-                    throw Exception("GitHubからの応答が失敗しました: ${response.status}")
-                }
-
-                // JSONをパース
-                val responseJson = json.parseToJsonElement(response.bodyAsText()).jsonObject
-                val assets = responseJson["assets"]?.jsonArray ?: return@withContext null
-
-                // アセットの確認
-                if (assets.isEmpty()) {
-                    throw Exception("このリリースにはアセットがありません")
-                }
-
-                // 指定したアセット番号（または最初のアセット）を選択
-                val assetIndex = (number ?: 1).coerceIn(1, assets.size) - 1
-                val asset = assets[assetIndex].jsonObject
-
-                // ダウンロードURL取得
-                val downloadUrl = asset["browser_download_url"]?.jsonPrimitive?.content
-                    ?: throw Exception("ダウンロードURLが見つかりません")
-
-                // ファイル名取得
-                val fileName = asset["name"]?.jsonPrimitive?.content ?: "plugin-${LocalDateTime.now()}.jar"
-
-                // ファイルをダウンロード
-                val fileResponse = client.get(downloadUrl)
-                if (!fileResponse.status.isSuccess()) {
-                    throw Exception("ファイルのダウンロードに失敗しました: ${fileResponse.status}")
-                }
-
-                // 一時ファイルに保存
-                val tempFile = File.createTempFile("plugin-", "-${fileName}")
-                tempFile.writeBytes(fileResponse.body())
-
-                tempFile
-            } catch (e: Exception) {
-                println("プラグインのダウンロードに失敗しました: ${e.message}")
-                null
-            }
+        if (assets.isEmpty()) {
+            throw Exception("このリリースにはアセットがありません")
         }
+
+        //
+        val assetIndex = (number ?: 1).coerceIn(1, assets.size) - 1
+        val asset = assets[assetIndex].jsonObject
+
+        val downloadUrl = asset["browser_download_url"]?.jsonPrimitive?.content
+            ?: throw Exception("ダウンロードURLが見つかりません")
+
+        val fileName = asset["name"]?.jsonPrimitive?.content ?: "plugin-${LocalDateTime.now()}.jar"
+        return downloadFile(downloadUrl, fileName)
+    }
+
+    /**
+     * リポジトリURLからプラグインをダウンロード
+     * @param url リポジトリURL
+     * @param number アセット番号（オプション）
+     * @return ダウンロードしたファイル
+     */
+    override suspend fun downloadLatest(url: String, number: Int?): File? {
+        val urlData = getUrlData(url) ?: throw Exception("無効なGitHub URL: $url")
+        val latestVersion = getLatestVersion(urlData)
+        return downloadByVersion(urlData, latestVersion, number)
     }
 } 

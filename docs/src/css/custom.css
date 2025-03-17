@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is([data-theme="dark"] *));
 
 @theme {
-    
     --color-border: hsl(var(--border));
     --color-input: hsl(var(--input));
     --color-ring: hsl(var(--ring));
@@ -34,8 +36,6 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 }
-
-
 
 @layer base {
     :root {

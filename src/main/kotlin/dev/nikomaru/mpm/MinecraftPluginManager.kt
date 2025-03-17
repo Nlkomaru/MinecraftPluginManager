@@ -1,5 +1,5 @@
 /*
- * Written in 2023-2024 by Nikomaru <nikomaru@nikomaru.dev>
+ * Written in 2023-2025 by Nikomaru <nikomaru@nikomaru.dev>
  *
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.This software is distributed without any warranty.
  *
@@ -9,7 +9,8 @@
 
 package dev.nikomaru.mpm
 
-import dev.nikomaru.mpm.adapter.controller.*
+import dev.nikomaru.mpm.adapter.controller.InstallCommand
+import dev.nikomaru.mpm.adapter.controller.ListCommand
 import dev.nikomaru.mpm.adapter.repository.DownloaderRepositoryImpl
 import dev.nikomaru.mpm.adapter.repository.PluginRepositoryImpl
 import dev.nikomaru.mpm.domain.repository.DownloaderRepository

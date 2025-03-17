@@ -10,23 +10,15 @@ const config: Config = {
     staticDirectories: ["static"],
     trailingSlash: true,
 
-    // Set the production url of your site here
     url: "https://mpm.plugin.nikomaru.dev",
-    // Set the /<baseUrl>/ pathname under which your site is served
-    // For GitHub pages deployment, it is often '/<projectName>/'
     baseUrl: "/",
 
-    // GitHub pages deployment config.
-    // If you aren't using GitHub pages, you don't need these.
-    organizationName: "morinoparty", // Usually your GitHub org/user name.
-    projectName: "MinecraftPluginManager", // Usually your repo name.
+    organizationName: "morinoparty",
+    projectName: "MinecraftPluginManager",
 
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
 
-    // Even if you don't use internationalization, you can use this field to set
-    // useful metadata like html lang. For example, if your site is Chinese, you
-    // may want to replace "en" with "zh-Hans".
     i18n: {
         defaultLocale: "ja",
         locales: ["ja"],
@@ -39,8 +31,6 @@ const config: Config = {
                 docs: {
                     sidebarPath: "./sidebars.ts",
                     routeBasePath: "",
-                    // Please change this to your repo.
-                    // Remove this to remove the "edit this page" links.
                     editUrl:
                         "https://github.com/nlkomaru/minecraftpluginmanager/tree/master/docs/",
                 },
@@ -52,10 +42,10 @@ const config: Config = {
     ],
     plugins: [
         ["./src/plugins/tailwind-config.js", {}],
+        ["./src/plugins/llms-txt.ts", {}],
         [
             require.resolve("@easyops-cn/docusaurus-search-local"),
             {
-                // Options here
                 indexDocs: true,
                 language: "ja",
                 docsRouteBasePath: "/",
@@ -63,7 +53,6 @@ const config: Config = {
         ],
     ],
     themeConfig: {
-        // Replace with your project's social card
         image: "img/docusaurus-social-card.jpg",
         navbar: {
             title: "MinecraftPluginManager",

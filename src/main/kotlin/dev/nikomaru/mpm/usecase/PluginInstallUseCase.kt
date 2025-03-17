@@ -1,5 +1,5 @@
 /*
- * Written in 2023-2024 by Nikomaru <nikomaru@nikomaru.dev>
+ * Written in 2023-2025 by Nikomaru <nikomaru@nikomaru.dev>
  *
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.This software is distributed without any warranty.
  *
@@ -13,9 +13,9 @@ import dev.nikomaru.mpm.domain.model.PluginData
 import dev.nikomaru.mpm.domain.repository.DownloaderRepository
 import dev.nikomaru.mpm.domain.repository.PluginRepository
 import dev.nikomaru.mpm.utils.PluginDataUtils
-import java.io.File
 import org.bukkit.plugin.java.JavaPlugin
 import org.koin.core.component.KoinComponent
+import java.io.File
 
 /**
  * プラグインのインストールに関するユースケース

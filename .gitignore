@@ -122,3 +122,5 @@ run/
 .vscode
 
 bin/
+
+!.idea/copyright/

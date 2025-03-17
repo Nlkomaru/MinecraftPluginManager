@@ -1,5 +1,5 @@
 /*
- * Written in 2023-2024 by Nikomaru <nikomaru@nikomaru.dev>
+ * Written in 2023-2025 by Nikomaru <nikomaru@nikomaru.dev>
  *
  * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide.This software is distributed without any warranty.
  *
@@ -15,8 +15,8 @@ import dev.nikomaru.mpm.domain.model.repository.VersionData
 import dev.nikomaru.mpm.domain.repository.DownloaderRepository
 import dev.nikomaru.mpm.infrastructure.github.GithubDownloader
 import dev.nikomaru.mpm.infrastructure.spigot.SpigotDownloader
-import java.io.File
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 /**
  * DownloaderRepositoryの実装クラス
